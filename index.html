@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vedant Rasane Portfolio</title>
+<meta name="description" content="Vedant Rasane, supply chain analyst. MS Supply Chain Analytics, Oregon State University. Transportation, inventory and procurement analytics.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Palette: Oregon State orange and black, hi-vis yellow and teal as accents, on cool fog. */
+  --fog:#EEF1F6;
+  --white:#FFFFFF;
+  --navy:#1A1A1A;
+  --navy-2:#333333;
+  --muted:#55607A;
+  --line:#D5DBE6;
+  --cobalt:#D73F09;
+  --cobalt-deep:#A8320A;
+  --orange:#D73F09;
+  --yellow:#FFD60A;
+  --teal:#00A3A3;
+  /* status (reserved) */
+  --ok:#0F8A6E; --warn:#B57A00; --crit:#D21F3C; --excess:#5B4BD6;
+  --todo-bg:#FFF4B8; --todo-ink:#6A4B00;
+  --display:"Bricolage Grotesque", "Arial Narrow", Arial, sans-serif;
+  --body:"Instrument Sans", "Segoe UI", Roboto, Arial, sans-serif;
+  --r-sm:6px; --r-md:14px; --r-lg:28px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--fog);color:var(--navy);font-family:var(--body);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--display);margin:0;line-height:1.05;letter-spacing:-0.02em;text-wrap:balance}
+p{margin:0 0 1em;max-width:66ch}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--orange);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+.todo{background:var(--todo-bg);color:var(--todo-ink);border:1px dashed #C9A300;padding:0 6px;border-radius:4px;font-size:.86em;font-weight:600;white-space:nowrap}
+.num{font-variant-numeric:tabular-nums}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ---------- nav ---------- */
+.nav{position:sticky;top:0;z-index:50;background:rgba(238,241,246,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:24px;height:64px}
+.brand{font-family:var(--display);font-weight:800;font-size:21px;text-decoration:none;display:flex;align-items:center;gap:10px}
+.nav nav{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}
+.nav nav a{text-decoration:none;font-weight:600;font-size:15px;padding:8px 12px;border-radius:999px}
+.nav nav a:hover{background:var(--white)}
+.nav nav a.hire{background:var(--navy);color:var(--white)}
+.nav nav a.hire{background:var(--orange)}
+.nav nav a.hire:hover{background:var(--navy)}
+@media (max-width:900px){.nav nav a:not(.hire):not(.lab){display:none}}
+@media (max-width:520px){.nav nav a.lab{display:none}}
+.brand{white-space:nowrap}
+
+/* ---------- hero ---------- */
+.hero{background:var(--cobalt);color:var(--white);position:relative;overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:1.05fr 1fr;gap:40px;align-items:center;padding-top:72px;padding-bottom:72px}
+.hero .who{font-weight:600;font-size:17px;display:flex;align-items:center;gap:10px;margin-bottom:22px}
+.hero .who .dot{width:10px;height:10px;border-radius:50%;background:#fff;box-shadow:0 0 0 5px rgba(255,255,255,.25)}
+.hero h1{font-size:clamp(44px,6.4vw,84px);font-weight:800;letter-spacing:-0.035em;line-height:.98}
+.hero h1 .stack{display:block}
+.hero .lede{font-size:20px;line-height:1.5;margin:26px 0 32px;opacity:.95;max-width:34em}
+.btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:16px;padding:14px 22px;border-radius:999px;text-decoration:none;border:2px solid transparent;cursor:pointer;font-family:var(--body)}
+.btn.orange{background:var(--navy);color:var(--white)}
+.btn.orange:hover{background:#000}
+.btn.outline{border-color:rgba(255,255,255,.7);color:var(--white);background:transparent}
+.btn.outline:hover{background:rgba(255,255,255,.12)}
+.netcard{background:var(--cobalt-deep);border-radius:var(--r-lg);padding:18px 18px 12px;position:relative}
+.netcard svg{width:100%;height:auto;display:block}
+.netcard .cap{display:flex;justify-content:space-between;font-size:13.5px;opacity:.85;padding:4px 6px 0}
+.netcard .live{display:inline-flex;align-items:center;gap:8px;font-weight:600}
+.netcard .live::before{content:"";width:8px;height:8px;border-radius:50%;background:#fff}
+@media (max-width:900px){.hero .wrap{grid-template-columns:1fr;padding-top:48px}}
+
+/* proof strip */
+.proof{background:var(--navy);color:var(--white)}
+.proof .wrap{display:grid;grid-template-columns:repeat(4,1fr)}
+.proof div{padding:22px 20px;border-left:1px solid rgba(255,255,255,.14)}
+.proof div:first-child{border-left:0;padding-left:0}
+.proof strong{display:block;font-family:var(--display);font-size:20px;font-weight:700}
+.proof span{font-size:14.5px;opacity:.75}
+@media (max-width:800px){.proof .wrap{grid-template-columns:1fr 1fr}.proof div{border-left:0;padding-left:0}}
+
+/* ---------- sections ---------- */
+section.block{padding:96px 0}
+.head{display:grid;grid-template-columns:1fr 1.2fr;gap:40px;align-items:end;margin-bottom:44px}
+.head h2{font-size:clamp(36px,4.6vw,58px);font-weight:800}
+.head p{color:var(--muted);margin:0;font-size:18px}
+@media (max-width:800px){.head{grid-template-columns:1fr;gap:14px}}
+
+/* intro */
+.intro{display:grid;grid-template-columns:1.4fr 1fr;gap:56px;align-items:start}
+.intro .big{font-family:var(--display);font-size:clamp(26px,2.8vw,36px);font-weight:500;line-height:1.25;letter-spacing:-0.015em;max-width:none}
+.intro .big b{font-weight:800}
+.skills h3{font-size:18px;margin:0 0 10px}
+.skills .grp{margin-bottom:22px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:var(--white);border:1px solid var(--line);padding:5px 12px;border-radius:999px;font-size:14.5px;font-weight:500}
+@media (max-width:860px){.intro{grid-template-columns:1fr}}
+
+/* ---------- experience ---------- */
+#experience{background:var(--white)}
+.role{display:grid;grid-template-columns:220px 1fr;gap:36px;padding:40px 0;border-top:2px solid var(--navy)}
+.role:last-child{border-bottom:2px solid var(--navy)}
+.logo{aspect-ratio:1/1;border-radius:var(--r-md);display:grid;place-items:center;position:relative;overflow:hidden}
+.logo span{font-family:var(--display);font-weight:800;font-size:64px;letter-spacing:-0.04em;color:var(--white);position:relative}
+.logo::after{content:"";position:absolute;inset:auto -20% -30% auto;width:90%;height:60%;border-radius:50%;background:rgba(255,255,255,.12)}
+.logo img{width:86%;height:86%;object-fit:contain;position:relative}
+.logo.has-img{background:var(--white)!important;border:1px solid var(--line);aspect-ratio:auto;height:140px;padding:14px}
+.logo.has-img img{width:100%;height:100%}
+.logo.has-img.on-dark{background:#000!important;border-color:#000}
+.logo.has-img::after{display:none}
+.logo-note{font-size:12.5px;color:var(--muted);margin-top:8px}
+.role-meta{display:flex;flex-wrap:wrap;gap:8px 18px;color:var(--muted);font-size:15px;margin:10px 0 16px}
+.role h3{font-size:30px;font-weight:800}
+.role h3 .at{color:var(--orange)}
+.about-co{background:var(--fog);border-radius:var(--r-md);padding:14px 18px;margin:0 0 18px;font-size:15.5px;max-width:70ch}
+.about-co b{display:block;font-size:13.5px;color:var(--muted);font-weight:600;margin-bottom:2px}
+.role ul{margin:0 0 16px;padding-left:20px;max-width:72ch}
+.role li{margin-bottom:8px}
+.role li::marker{color:var(--orange)}
+@media (max-width:760px){.role{grid-template-columns:1fr;gap:18px}.logo{width:120px}.logo span{font-size:44px}.logo.has-img{width:min(260px,100%);height:120px}}
+
+.sub-head{font-size:30px;font-weight:800;margin:56px 0 18px}
+/* ---------- lab ---------- */
+#lab{background:var(--navy);color:var(--white)}
+#lab .head p{color:rgba(255,255,255,.75)}
+.tabs{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap}
+.tab{font-family:var(--body);font-weight:700;font-size:16px;padding:12px 20px;border-radius:999px;border:2px solid rgba(255,255,255,.3);background:transparent;color:var(--white);cursor:pointer}
+.tab[aria-selected="true"]{background:var(--orange);color:var(--white);border-color:var(--orange)}
+.panel{background:var(--white);color:var(--navy);border-radius:var(--r-lg);padding:28px}
+.panel[hidden]{display:none}
+.demo-note{font-size:13.5px;color:var(--muted);margin:0 0 18px}
+.controls{display:flex;flex-wrap:wrap;gap:16px 28px;align-items:flex-end;padding:16px 18px;background:var(--fog);border-radius:var(--r-md);margin-bottom:20px}
+.ctl label{display:block;font-size:13.5px;font-weight:600;color:var(--muted);margin-bottom:4px}
+.ctl output{font-weight:700;color:var(--navy);margin-left:6px}
+.ctl input[type=range]{width:200px;accent-color:var(--orange)}
+.ctl select{font:inherit;font-size:15px;padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--white)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.kpi{border:1px solid var(--line);border-radius:var(--r-md);padding:14px 16px}
+.kpi .v{font-family:var(--display);font-size:34px;font-weight:800;line-height:1}
+.kpi .l{font-size:14px;color:var(--muted);margin-top:6px}
+@media (max-width:760px){.kpis{grid-template-columns:1fr 1fr}}
+.dash-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:22px}
+@media (max-width:980px){.dash-grid{grid-template-columns:1fr}}
+.card{border:1px solid var(--line);border-radius:var(--r-md);padding:16px 18px}
+.card h4{font-size:18px;margin-bottom:4px}
+.card .sub{font-size:13.5px;color:var(--muted);margin:0 0 10px}
+.ai-brief{background:#FFF4EE;border:2px solid var(--orange)}
+.ai-brief .tag{display:inline-block;background:var(--cobalt);color:var(--white);font-size:12.5px;font-weight:700;padding:3px 10px;border-radius:999px;margin-bottom:10px}
+.ai-brief ul{padding-left:18px;margin:0}
+.ai-brief li{margin-bottom:8px;font-size:15.5px}
+table.data{width:100%;border-collapse:collapse;font-size:14.5px}
+table.data th{text-align:left;font-weight:600;color:var(--muted);font-size:13px;padding:8px 8px;border-bottom:1px solid var(--line)}
+table.data td{padding:8px;border-bottom:1px solid #EDF0F5}
+table.data td.r,table.data th.r{text-align:right}
+table.data tr:hover td{background:#F7F9FC}
+.tbl-wrap{overflow-x:auto}
+.status{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:13.5px;white-space:nowrap}
+.status i{font-style:normal;display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;color:#fff;font-size:11px;font-weight:800}
+.s-ok{color:var(--ok)} .s-ok i{background:var(--ok)}
+.s-warn{color:var(--warn)} .s-warn i{background:var(--warn)}
+.s-crit{color:var(--crit)} .s-crit i{background:var(--crit)}
+.s-excess{color:var(--excess)} .s-excess i{background:var(--excess)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13.5px;margin:4px 0 8px}
+.tip{position:fixed;pointer-events:none;background:var(--navy);color:#fff;font-size:13.5px;padding:8px 10px;border-radius:8px;z-index:100;opacity:0;transition:opacity .1s;max-width:240px;line-height:1.4}
+.tip.on{opacity:1}
+.stops{display:flex;flex-wrap:wrap;gap:8px}
+.stops label{display:inline-flex;align-items:center;gap:6px;background:var(--white);border:1px solid var(--line);padding:5px 10px;border-radius:999px;font-size:14px;cursor:pointer}
+.btn.small{padding:9px 16px;font-size:14.5px}
+.btn.navy{background:var(--navy);color:#fff}
+.btn.navy:hover{background:var(--cobalt)}
+#map svg{width:100%;height:auto;display:block;background:#F4F6FB;border-radius:10px}
+.route-result{font-size:15px;margin-top:10px;min-height:2.6em}
+
+/* ---------- plugins ---------- */
+.plug-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:18px}
+.plug{border-radius:var(--r-lg);padding:26px;position:relative;display:flex;flex-direction:column}
+.plug h3{font-size:26px;font-weight:800;margin:10px 0 10px}
+.plug p{font-size:15.5px;margin-bottom:14px}
+.plug .state{align-self:flex-start;font-size:13px;font-weight:700;padding:4px 11px;border-radius:999px;background:rgba(255,255,255,.22)}
+.plug .how{margin-top:auto;font-size:14px;opacity:.85}
+.plug.feature{grid-column:span 6;background:var(--navy);color:#fff;display:grid;grid-template-columns:1.2fr 1fr;gap:28px}
+.plug.feature h3{font-size:38px}
+.plug.feature .flow{background:rgba(255,255,255,.14);border-radius:var(--r-md);padding:16px 18px;font-size:15px}
+.plug.feature .flow ol{margin:0;padding-left:20px}
+.plug.feature .flow li{margin-bottom:6px}
+.plug.c1{grid-column:span 3;background:#FFE1D2;color:var(--navy)}
+.plug.c1 .state{background:rgba(14,27,61,.1)}
+.plug.c2{grid-column:span 2;background:var(--orange);color:#fff}
+.plug.c3{grid-column:span 2;background:#2B2B2B;color:#fff}
+.plug.c4{grid-column:span 3;background:var(--white);border:2px solid var(--navy)}
+.plug.c4 .state{background:var(--fog)}
+@media (max-width:900px){.plug-grid{grid-template-columns:1fr}.plug.feature,.plug.c1,.plug.c2,.plug.c3,.plug.c4{grid-column:auto}.plug.feature{grid-template-columns:1fr}}
+
+/* ---------- linkedin ---------- */
+#posts{background:var(--white)}
+.carousel{position:relative}
+.track-wrap{overflow:hidden;border-radius:var(--r-md)}
+.track{display:flex;gap:18px;transition:transform .6s cubic-bezier(.22,.7,.2,1);will-change:transform}
+@media (prefers-reduced-motion:reduce){.track{transition:none}}
+.track .post{flex:0 0 calc((100% - 36px)/3);min-height:270px}
+@media (max-width:900px){.track .post{flex-basis:calc((100% - 18px)/2)}}
+@media (max-width:600px){.track .post{flex-basis:100%}}
+.post .kicker{font-size:13px;font-weight:700;color:var(--orange)}
+.post .shot{margin:-22px -22px 4px;aspect-ratio:16/10;overflow:hidden;border-radius:var(--r-md) var(--r-md) 0 0;background:var(--line)}
+.post .shot img{width:100%;height:100%;object-fit:cover;display:block}
+.post h3{font-size:22px;line-height:1.15}
+.post .tags{display:flex;flex-wrap:wrap;gap:6px}
+.post .tags span{font-size:12.5px;font-weight:600;color:var(--navy-2);background:var(--white);border:1px solid var(--line);padding:2px 9px;border-radius:999px}
+.post.feat{background:var(--orange);color:#fff;border-color:var(--orange)}
+.post.feat .kicker,.post.feat a.read{color:#fff}
+.post.feat .av{background:#fff;color:var(--orange)}
+.post.feat .date{color:rgba(255,255,255,.85)}
+.post.feat .tags span{background:rgba(255,255,255,.18);border-color:transparent;color:#fff}
+.post.dark{background:var(--navy);color:#fff;border-color:var(--navy)}
+.post.dark .date{color:rgba(255,255,255,.7)}
+.post.dark a.read{color:#FF8A5C}
+.post.dark .tags span{background:rgba(255,255,255,.1);border-color:transparent;color:#fff}
+.car-ctl{display:flex;align-items:center;gap:12px;margin-top:20px}
+.car-ctl button.arrow{width:46px;height:46px;border-radius:50%;border:2px solid var(--navy);background:var(--white);font-size:20px;font-weight:700;cursor:pointer;color:var(--navy)}
+.car-ctl button.arrow:hover{background:var(--navy);color:#fff}
+.dots{display:flex;gap:8px;margin-left:6px}
+.dots button{width:10px;height:10px;border-radius:999px;border:0;background:var(--line);cursor:pointer;padding:0;transition:width .3s}
+.dots button[aria-current="true"]{background:var(--orange);width:28px}
+.car-ctl .pp{margin-left:auto;font:inherit;font-size:14px;font-weight:600;background:none;border:0;color:var(--muted);cursor:pointer}
+.post{border:1px solid var(--line);border-radius:var(--r-md);padding:22px;display:flex;flex-direction:column;gap:12px;background:var(--fog)}
+.post .who{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px}
+.post .av{width:38px;height:38px;border-radius:50%;background:var(--orange);color:#fff;display:grid;place-items:center;font-family:var(--display);font-weight:800}
+.post .date{font-weight:500;color:var(--muted);font-size:13px}
+.post p{font-size:15.5px;margin:0}
+.post a.read{margin-top:auto;font-weight:700;color:var(--orange);text-decoration:none}
+.post a.read:hover{text-decoration:underline}
+.post iframe{width:100%;border:0;border-radius:8px;min-height:420px;background:#fff}
+
+/* ---------- projects ---------- */
+.proj-list{display:grid;grid-template-columns:repeat(2,1fr);gap:0 40px}
+.proj{padding:24px 0;border-top:1px solid var(--line)}
+.proj .k{font-size:13.5px;font-weight:700;color:var(--orange)}
+.proj h3{font-size:24px;margin:6px 0 8px}
+.proj p{font-size:16px;color:var(--navy-2);margin:0}
+@media (max-width:800px){.proj-list{grid-template-columns:1fr}}
+
+/* ---------- education ---------- */
+#education{background:var(--white)}
+.route{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);position:relative}
+.route::before{content:"";position:absolute;left:0;right:0;top:15px;height:4px;background:repeating-linear-gradient(90deg,var(--navy) 0 14px,transparent 14px 22px)}
+.route li{position:relative;padding:48px 22px 0 0}
+.route li::before{content:"";position:absolute;top:4px;left:0;width:26px;height:26px;border-radius:50%;background:var(--white);border:4px solid var(--navy)}
+.route li.now::before{background:var(--orange);border-color:var(--orange);box-shadow:0 0 0 6px rgba(255,91,31,.2)}
+.route .when{font-size:14px;font-weight:700;color:var(--orange)}
+.route h3{font-size:22px;margin:6px 0 6px}
+.route .sch{font-size:15px;color:var(--muted);margin-bottom:8px}
+.route p{font-size:15px}
+@media (max-width:900px){.route{grid-template-columns:1fr}.route::before{left:13px;right:auto;width:4px;height:100%;top:0;background:repeating-linear-gradient(180deg,var(--navy) 0 14px,transparent 14px 22px)}.route li{padding:0 0 32px 48px}}
+
+/* achievements */
+.ach{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.ach div{background:var(--white);border-radius:var(--r-md);padding:22px;border-top:6px solid var(--orange)}
+.ach div:nth-child(2){border-top-color:var(--navy)}
+.ach div:nth-child(3){border-top-color:#F08A5D}
+.ach div:nth-child(4){border-top-color:var(--navy)}
+.ach div:nth-child(5){border-top-color:#F08A5D}
+.ach h3{font-size:40px;font-weight:800;margin:0 0 8px;color:var(--orange)}
+.ach p{font-size:15.5px;margin:0;color:var(--navy-2)}
+@media (max-width:800px){.ach{grid-template-columns:1fr}}
+
+
+/* results band */
+.results{background:var(--navy);color:#fff;padding:44px 0 52px}
+.results h2{font-size:20px;font-weight:700;margin-bottom:22px;opacity:.9}
+.results .ach{display:grid;grid-template-columns:repeat(6,1fr);gap:0}
+.results .ach div{background:transparent;border-radius:0;border-top:0;border-left:1px solid rgba(255,255,255,.18);padding:4px 18px}
+.results .ach div:first-child{border-left:0;padding-left:0}
+.results .ach h3{font-size:clamp(28px,2.6vw,38px);color:#FF7A45;margin:0 0 6px;white-space:nowrap}
+.results .ach p{font-size:14px;color:rgba(255,255,255,.78);margin:0}
+@media (max-width:1000px){.results .ach{grid-template-columns:repeat(3,1fr);row-gap:24px}.results .ach div:nth-child(4){border-left:0;padding-left:0}}
+@media (max-width:600px){.results .ach{grid-template-columns:1fr 1fr}.results .ach div{border-left:0;padding-left:0;padding-right:10px}}
+/* contact */
+.contact{background:var(--navy);color:#fff;padding:88px 0}
+.contact .wrap{display:grid;grid-template-columns:1.3fr 1fr;gap:48px;align-items:center}
+.contact h2{font-size:clamp(38px,5vw,68px);font-weight:800}
+.contact p{font-size:19px;margin-top:18px}
+.contact dl{margin:0;display:grid;gap:16px;background:var(--orange);padding:28px;border-radius:var(--r-lg)}
+.contact dt{font-size:13.5px;opacity:.85}
+.contact dd{margin:0;font-weight:600;font-size:17px;word-break:break-word}
+.contact dd a{color:#fff}
+@media (max-width:860px){.contact .wrap{grid-template-columns:1fr}}
+footer{background:#000;color:rgba(255,255,255,.7);font-size:14px;padding:22px 0}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top">Vedant Rasane</a>
+    <nav aria-label="Sections">
+      <a href="#experience">Experience</a>
+      <a class="lab" href="#lab">Dashboards</a>
+      <a href="#plugins">AI plugins</a>
+      <a href="#projects">Projects</a>
+      <a href="#education">Education</a>
+      <a href="https://www.linkedin.com/in/vedantsrasane/" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="hire" href="#contact">Contact me</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <div class="who"><span class="dot" aria-hidden="true"></span>Vedant Rasane, Supply Chain Analyst</div>
+      <h1><span class="stack">Operations instinct.</span><span class="stack">Analytics edge.</span></h1>
+      <p class="lede">I'm a supply chain analyst who has run the floor, not just the spreadsheet. I combine hands-on operations experience with analytics and AI to solve the problems modern supply chains actually face.</p>
+      <div class="btns">
+        <a class="btn orange" href="#lab">Try my live dashboards</a>
+        <a class="btn outline" href="#experience">See my experience</a>
+      </div>
+    </div>
+    <div class="netcard" aria-label="Animated freight network illustration">
+      <svg id="heroNet" viewBox="0 0 520 420" role="img" aria-labelledby="heroNetT">
+        <title id="heroNetT">Illustrated Pacific Northwest freight network with shipments moving from a Portland distribution center</title>
+      </svg>
+      <div class="cap"><span class="live">Network in motion</span><span>Pacific Northwest network (illustration)</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= RESULTS ================= -->
+<section class="results" id="achievements" aria-labelledby="resH">
+  <div class="wrap">
+    <h2 id="resH">Results so far</h2>
+    <div class="ach">
+      <div><h3>$80K</h3><p>Annual carrier overpayment found across 100+ lanes at Reser's.</p></div>
+      <div><h3>$58K</h3><p>Annual procurement cost cut at Previse through new suppliers and renegotiation.</p></div>
+      <div><h3>$50K</h3><p>Freight claim recoveries supported through damaged-load audits.</p></div>
+      <div><h3>95% OTIF</h3><p>Sustained for key retail accounts, including Walmart, across 4 DCs.</p></div>
+      <div><h3>45% leaner</h3><p>Uniform PAR levels in my capstone model, 11 down to 6 per employee.</p></div>
+      <div><h3>20% faster</h3><p>Packing line after my automated labeling proposal was adopted.</p></div>
+    </div>
+</section>
+
+<!-- ================= INTRO ================= -->
+<section class="block" id="about">
+  <div class="wrap intro">
+    <div>
+      <p class="big">Operations people know where things break. Analysts know how to prove it. <b>I do both</b>, and turn that into decisions a team can act on the same day.</p>
+      <p>M.S. in Supply Chain Analytics with 2+ years across transportation, sourcing, inventory and manufacturing operations. Open to Supply Chain, Operations and Logistics Analyst roles anywhere in the US.</p>
+    </div>
+    <div class="skills">
+      <div class="grp"><h3>Analytics &amp; AI</h3><div class="chips"><span class="chip">Excel (XLOOKUP, pivots, Power Query, macros)</span><span class="chip">SQL</span><span class="chip">Power BI</span><span class="chip">Tableau</span><span class="chip">QuickSight</span><span class="chip">Python</span><span class="chip">R</span><span class="chip">AI agents &amp; plugins</span></div></div>
+      <div class="grp"><h3>Systems</h3><div class="chips"><span class="chip">SAP S/4HANA (TM, WM, PP)</span><span class="chip">Infor ERP</span><span class="chip">MercuryGate TMS</span><span class="chip">FourKites</span><span class="chip">DAT</span><span class="chip">WMS</span></div></div>
+      <div class="grp"><h3>Supply chain</h3><div class="chips"><span class="chip">Carrier rate benchmarking</span><span class="chip">Freight audit and claims</span><span class="chip">OTIF</span><span class="chip">Demand forecasting</span><span class="chip">Inventory optimization</span><span class="chip">Supplier management</span><span class="chip">TCO modeling</span><span class="chip">Lean Six Sigma (DMAIC)</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= EXPERIENCE ================= -->
+<section class="block" id="experience">
+  <div class="wrap">
+    <div class="head">
+      <h2>Work experience</h2>
+      <p>Four roles across the chain: plan, source, make, store and move. Most recent first.</p>
+    </div>
+
+    <article class="role">
+      <div>
+        <div class="logo has-img"><img src="logos/resers.png" alt="Reser's Fine Foods logo"></div>
+      </div>
+      <div>
+        <h3>Supply Chain Transportation Intern <span class="at">at Reser's Fine Foods</span></h3>
+        <div class="role-meta"><span>Jun 2025 – Aug 2025</span><span>Beaverton, OR</span></div>
+        <div class="about-co"><b>About the company</b>Family-owned refrigerated foods maker shipping across North America since 1950.</div>
+        <ul>
+          <li>Led carrier rate benchmarking across <b>100+ lanes</b> against DAT data, finding 18–20 above-market carriers and <b>$80K in annual overpayment</b>; presented to the CEO, leading to rate renegotiations and new 3PL onboarding.</li>
+          <li>Monitored daily reefer shipments from the private fleet and 3PLs across 4 U.S. DCs, sustaining <b>95% OTIF</b> for key retail accounts including Walmart.</li>
+          <li>Built an Excel rate and carrier analysis tool from TMS and ERP data (tenders, rate confirmations, freight invoices) that my manager adopted for ongoing reporting.</li>
+          <li>Drove the move from a legacy tracking and temperature-monitoring system to a real-time platform, improving cold-chain visibility.</li>
+          <li>Audited damaged-freight claims with BOLs, PODs and temperature logs, supporting <b>$50K in recoveries</b>, and helped plan and tender lanes for the July 4th demand peak.</li>
+        </ul>
+        <div class="chips"><span class="chip">Transportation</span><span class="chip">Cold chain</span><span class="chip">Freight audit</span><span class="chip">MercuryGate</span><span class="chip">FourKites</span><span class="chip">DAT</span><span class="chip">Excel</span></div>
+      </div>
+    </article>
+
+    <article class="role">
+      <div>
+        <div class="logo has-img"><img src="logos/osu.webp" alt="Oregon State University logo"></div>
+      </div>
+      <div>
+        <h3>Dining Services Student Employee <span class="at">at OSU University Housing &amp; Dining</span></h3>
+        <div class="role-meta"><span>Sep 2024 – Jun 2026</span><span>Corvallis, OR</span></div>
+        <div class="about-co"><b>About the company</b>Runs housing and dining for Oregon State's Corvallis campus.</div>
+        <ul>
+          <li>Served <b>300–400 orders a day</b> while monitoring stock and replenishment across every service period.</li>
+          <li>Proposed FIFO stock rotation, adopted by the kitchen manager and chef team, to cut perishable waste.</li>
+          <li>Tracked perishable and dry-goods consumption to time replenishment and avoid overstock and stockouts.</li>
+        </ul>
+        <div class="chips"><span class="chip">Inventory control</span><span class="chip">Replenishment</span><span class="chip">FIFO</span><span class="chip">Waste reduction</span></div>
+      </div>
+    </article>
+
+    <article class="role">
+      <div>
+        <div class="logo has-img on-dark"><img src="logos/previse.png" alt="Previse Studio logo"></div>
+      </div>
+      <div>
+        <h3>Operations &amp; Procurement Associate <span class="at">at Previse Studio Pvt. Ltd.</span></h3>
+        <div class="role-meta"><span>Jul 2022 – May 2024</span><span>Pune, India</span></div>
+        <div class="about-co"><b>About the company</b>VR/AR studio building immersive training for engineering and healthcare clients.</div>
+        <ul>
+          <li>Ran end-to-end supply for VR/AR training hardware across <b>7–9 suppliers</b> and about 15 POs a month: sourcing, pricing, lead times, inventory and delivery.</li>
+          <li>Sourced alternative suppliers and renegotiated pricing, cutting annual procurement cost by <b>$58K</b> (INR 48 lakh) with no loss in on-time delivery.</li>
+          <li>Owned on-time hardware delivery for <b>4 major healthcare clients</b>, coordinating suppliers, inventory and order fulfillment.</li>
+          <li>Aligned purchasing with product needs alongside in-house IT developers, and worked directly with the CEO on business development.</li>
+        </ul>
+        <div class="chips"><span class="chip">Supply planning</span><span class="chip">Supplier management</span><span class="chip">Cost reduction</span><span class="chip">Order fulfillment</span></div>
+      </div>
+    </article>
+
+    <article class="role">
+      <div>
+        <div class="logo has-img"><img src="logos/ajinkya.png" alt="Ajinkya Chemtech logo"></div>
+      </div>
+      <div>
+        <h3>Operations Intern <span class="at">at Ajinkya Chemtech Pvt. Ltd.</span></h3>
+        <div class="role-meta"><span>May 2022 – Jul 2022</span><span>Pune, India</span></div>
+        <div class="about-co"><b>About the company</b>Regulated seafood processing and cold-storage manufacturer.</div>
+        <ul>
+          <li>Proposed an automated sticker-printing system for the packing line; management adopted it, cutting packing time by <b>20%</b>.</li>
+          <li>Coordinated daily production schedules with a 20+ person team in a GMP, SSOP and HACCP-regulated facility, tracking production and shipments in Excel.</li>
+          <li>Handled temperature-controlled inventory in automated cold storage and shipped outbound orders to FDA requirements.</li>
+        </ul>
+        <div class="chips"><span class="chip">Production scheduling</span><span class="chip">Process improvement</span><span class="chip">Cold storage</span><span class="chip">GMP</span><span class="chip">HACCP</span></div>
+      </div>
+    </article>
+
+    <h3 class="sub-head">Leadership</h3>
+    <article class="role">
+      <div>
+        <div class="logo" style="background:var(--orange)"><span>SH</span></div>
+      </div>
+      <div>
+        <h3>Vice President <span class="at">at Startup Hub at OSU</span></h3>
+        <div class="role-meta"><span>2025 – 2026</span><span>Corvallis, OR</span><span>Student club</span></div>
+        <div class="about-co"><b>About the club</b>Oregon State's student community for founders and anyone curious about building a startup.</div>
+        <ul>
+          <li>Took charge of bringing a dormant club back to life and initiated its relaunch as Vice President.</li>
+          <li>Led the relaunch kickoff: a student founder panel and networking session that filled a lecture hall.</li>
+        </ul>
+        <div class="chips"><span class="chip">Leadership</span><span class="chip">Club revival</span><span class="chip">Event planning</span><span class="chip">Entrepreneurship</span></div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ================= LAB / DASHBOARDS ================= -->
+<section class="block" id="lab">
+  <div class="wrap">
+    <div class="head">
+      <h2>Live supply chain dashboards</h2>
+      <p>Two AI-assisted tools I'm building. Move a slider and everything recalculates.</p>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Dashboards">
+      <button class="tab" role="tab" id="t-inv" aria-controls="p-inv" aria-selected="true">Inventory control</button>
+      <button class="tab" role="tab" id="t-tms" aria-controls="p-tms" aria-selected="false" tabindex="-1">Transportation routes</button>
+    </div>
+
+    <!-- Inventory -->
+    <div class="panel" id="p-inv" role="tabpanel" aria-labelledby="t-inv">
+      <p class="demo-note">Demo data for a fictional refrigerated foods DC. Safety stock = z × σ<sub>daily</sub> × √lead time; reorder point = daily demand × lead time + safety stock; order quantity from EOQ.</p>
+      <div class="controls">
+        <div class="ctl"><label for="sl">Target service level<output id="slOut" class="num"></output></label><input id="sl" type="range" min="85" max="99.5" step="0.5" value="95"></div>
+        <div class="ctl"><label for="ld">Supplier delay added to lead time<output id="ldOut" class="num"></output></label><input id="ld" type="range" min="0" max="10" step="1" value="0"></div>
+        <div class="ctl"><label for="dm">Demand change<output id="dmOut" class="num"></output></label><input id="dm" type="range" min="-30" max="50" step="5" value="0"></div>
+      </div>
+      <div class="kpis">
+        <div class="kpi"><div class="v num" id="k1"></div><div class="l">SKUs at stockout risk</div></div>
+        <div class="kpi"><div class="v num" id="k2"></div><div class="l">SKUs to reorder now</div></div>
+        <div class="kpi"><div class="v num" id="k3"></div><div class="l">Safety stock value</div></div>
+        <div class="kpi"><div class="v num" id="k4"></div><div class="l">Inventory on hand</div></div>
+      </div>
+      <div class="dash-grid">
+        <div class="card">
+          <h4>Days of cover by SKU</h4>
+          <p class="sub">Bar = days of stock on hand. Tick = reorder point in days. Hover a bar for detail.</p>
+          <div class="legend" id="invLegend"></div>
+          <div id="invChart"></div>
+        </div>
+        <div class="card ai-brief">
+          <span class="tag">AI planner brief</span>
+          <h4>What to do today</h4>
+          <p class="sub">Generated from the numbers on this page. Updates with every change.</p>
+          <ul id="invBrief"></ul>
+        </div>
+      </div>
+      <div class="card" style="margin-top:22px">
+        <h4>Replenishment table</h4>
+        <div class="tbl-wrap"><table class="data" id="invTable"></table></div>
+      </div>
+    </div>
+
+    <!-- Transportation -->
+    <div class="panel" id="p-tms" role="tabpanel" aria-labelledby="t-tms" hidden>
+      <p class="demo-note">Demo data for a fictional Portland DC shipping reefer loads across the Pacific Northwest. Carriers are invented; distances are straight-line × 1.2 road factor.</p>
+      <div class="controls">
+        <div class="ctl"><label for="lc">Color lanes by</label>
+          <select id="lc"><option value="otif">On-time in-full (OTIF)</option><option value="cost">Rate vs. market benchmark</option></select></div>
+        <div class="ctl"><label for="otifT">OTIF target<output id="otifTOut" class="num"></output></label><input id="otifT" type="range" min="85" max="99" step="1" value="95"></div>
+      </div>
+      <div class="kpis">
+        <div class="kpi"><div class="v num" id="t1"></div><div class="l">Network OTIF (load-weighted)</div></div>
+        <div class="kpi"><div class="v num" id="t2"></div><div class="l">Lanes below target</div></div>
+        <div class="kpi"><div class="v num" id="t3"></div><div class="l">Weekly spend over benchmark</div></div>
+        <div class="kpi"><div class="v num" id="t4"></div><div class="l">Loads per week</div></div>
+      </div>
+      <div class="dash-grid">
+        <div class="card" id="map" style="align-self:start">
+          <h4>Lane map</h4>
+          <p class="sub">Hover a lane for its carrier and KPIs.</p>
+          <div class="legend" id="mapLegend"></div>
+          <svg id="mapSvg" viewBox="0 0 520 420" role="img" aria-label="Lane map from Portland DC"></svg>
+        </div>
+        <div style="display:grid;gap:22px;align-content:start">
+          <div class="card ai-brief">
+            <span class="tag">AI dispatcher brief</span>
+            <h4>Where to act this week</h4>
+            <ul id="tmsBrief"></ul>
+          </div>
+          <div class="card">
+            <h4>Plan a multi-stop run</h4>
+            <p class="sub">Pick stops in any order, then let the optimizer sequence them.</p>
+            <div class="stops" id="stopPick"></div>
+            <div class="btns" style="margin-top:12px">
+              <button class="btn small navy" id="optBtn" type="button">Optimize stop order</button>
+              <button class="btn small" id="clrBtn" type="button" style="border-color:var(--line)">Clear</button>
+            </div>
+            <div class="route-result" id="routeOut" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:22px">
+        <h4>Lane scorecard</h4>
+        <div class="tbl-wrap"><table class="data" id="laneTable"></table></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= AI PLUGINS ================= -->
+<section class="block" id="plugins">
+  <div class="wrap">
+    <div class="head">
+      <h2>AI plugins I build</h2>
+      <p>AI assistants that take repetitive work off the desk, one built and in daily use.</p>
+    </div>
+    <div class="plug-grid">
+      <article class="plug feature">
+        <div>
+          <span class="state">Built and in use</span>
+          <h3>Tsenta job-search plugin</h3>
+          <p>A custom plugin I built to run my own job search. It finds roles that match my profile, scores each one with a match percentage, and lets me apply with a single text from my phone.</p>
+          <p class="how">The same idea I bring to supply chain work: automate the repetitive steps and keep a person on the decision.</p>
+        </div>
+        <div class="flow">
+          <b>How it works</b>
+          <ol>
+            <li>Searches new postings that fit my profile and target roles.</li>
+            <li>Scores each job with a match percentage against my resume.</li>
+            <li>I reply with one text from my phone, and it handles the application.</li>
+          </ol>
+        </div>
+      </article>
+      <article class="plug c1">
+        <span class="state">In design</span>
+        <h3>Stockout Sentinel</h3>
+        <p>Watches daily sales against on-hand stock and the next delivery date, and warns the buyer which items will run out before the truck arrives, with a suggested order.</p>
+        <p class="how">Grew out of a stockout case I worked on for a bakery-café chain.</p>
+      </article>
+      <article class="plug c4">
+        <span class="state">Next up</span>
+        <h3>PO Chaser</h3>
+        <p>Tracks open purchase orders, spots ones drifting past their promised date, and drafts polite supplier follow-ups so nothing slips quietly.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LINKEDIN ================= -->
+<section class="block" id="posts">
+  <div class="wrap">
+    <div class="head">
+      <h2>From my LinkedIn</h2>
+      <p>Moments from my supply chain journey. Click any post to read it on LinkedIn.</p>
+    </div>
+    <div class="carousel" aria-roledescription="carousel" aria-label="LinkedIn posts">
+      <div class="track-wrap"><div class="track" id="postTrack"></div></div>
+      <div class="car-ctl">
+        <button class="arrow" id="prevP" type="button" aria-label="Previous posts">‹</button>
+        <button class="arrow" id="nextP" type="button" aria-label="Next posts">›</button>
+        <div class="dots" id="postDots"></div>
+        <button class="pp" id="ppP" type="button">Pause</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROJECTS ================= -->
+<section class="block" id="projects">
+  <div class="wrap">
+    <div class="head">
+      <h2>Selected projects</h2>
+      <p>Graduate work at Oregon State, each built on a real operating question.</p>
+    </div>
+    <div class="proj-list">
+      <article class="proj"><div class="k">Capstone, network and TCO</div><h3>Laundry insourcing feasibility and TCO</h3><p>TCO, facility location and route model comparing CINTAS uniform service with in-house laundry for OSU Housing &amp; Dining. Cut uniform PAR levels <b>45%</b>, from 11 to 6 per employee, without losing coverage.</p></article>
+      <article class="proj"><div class="k">Capstone, demand and inventory</div><h3>Tacovore demand planning</h3><p>SKU-level forecasts from sales and purchasing data, redesigned PAR levels and order timing, and flagged spoilage risk on high-velocity perishables like avocado.</p></article>
+      <article class="proj"><div class="k">SQL, Power BI</div><h3>Supplier performance and procurement tracker</h3><p>SQL queries and Power BI dashboards for purchase orders, supplier KPIs, fill rates and delivery risk across a simulated multi-tier supply chain.</p></article>
+      <article class="proj"><div class="k">Network design, Python LP</div><h3>Warehouse network optimization</h3><p>Linear programming model that picked the lowest-cost warehouse configuration, delivered as an Excel decision workbook.</p></article>
+      <article class="proj"><div class="k">Strategy, BA 561</div><h3>AI in hospital supply chains</h3><p>Where AI shifts control and value in hospital procurement and inventory, using Choudary's <em>Reshuffle</em> framework.</p></article>
+      <article class="proj"><div class="k">Global logistics, SCLM 557</div><h3>Reser's supply chain study</h3><p>Mapped Reser's refrigerated supply chain and identified improvement opportunities, building on my internship.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= EDUCATION ================= -->
+<section class="block" id="education">
+  <div class="wrap">
+    <div class="head">
+      <h2>Education timeline</h2>
+      <p>Business foundations in Pune, analytics at Oregon State.</p>
+    </div>
+    <ol class="route">
+      <li><div class="when">Jun 2023</div><h3>BBA, International Business</h3><div class="sch">Indira College of Commerce and Science, Pune</div></li>
+      <li><div class="when">Jun 2024</div><h3>PG Diploma, Entrepreneurship Development</h3><div class="sch">Symbiosis College of Distance Learning, Pune</div></li>
+      <li class="now"><div class="when">Sep 2024 – Jun 2026</div><h3>MS, Supply Chain Analytics</h3><div class="sch">Oregon State University, Corvallis</div><p>GPA 3.5. Global logistics, sourcing, demand forecasting, inventory optimization, SQL and predictive analytics.</p></li>
+    </ol>
+  </div>
+</section>
+
+
+
+</main>
+
+<!-- ================= CONTACT ================= -->
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div>
+      <h2>Hiring for supply chain or operations?</h2>
+      <p>Available now for full-time roles. Email me and I'll send my resume the same day.</p>
+    </div>
+    <dl>
+      <div><dt>Email</dt><dd><a href="mailto:vedantsrasane@gmail.com">vedantsrasane@gmail.com</a></dd></div>
+      <div><dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/vedantsrasane/" target="_blank" rel="noopener">linkedin.com/in/vedantsrasane</a></dd></div>
+      <div><dt>Based in</dt><dd>Boston, MA, open to relocation anywhere in the US</dd></div>
+    </dl>
+  </div>
+</section>
+<footer><div class="wrap">© 2026 Vedant Rasane. Dashboards use demo data.</div></footer>
+
+<div class="tip" id="tip" role="tooltip"></div>
+
+<script>
+(function(){
+"use strict";
+var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+var NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs, parent){var e=document.createElementNS(NS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
+function fmt$(v){return "$"+Math.round(v).toLocaleString("en-US");}
+function fmtK(v){return v>=1000?"$"+(v/1000).toFixed(v>=10000?0:1)+"k":"$"+Math.round(v);}
+var tip=document.getElementById("tip");
+function showTip(html,e){tip.innerHTML=html;tip.classList.add("on");moveTip(e);}
+function moveTip(e){var x=e.clientX+14,y=e.clientY+14;if(x+250>innerWidth)x=e.clientX-260;tip.style.left=x+"px";tip.style.top=y+"px";}
+function hideTip(){tip.classList.remove("on");}
+
+/* ---------- geography (shared by hero + map) ---------- */
+var CITIES={
+  PDX:{n:"Portland DC",lat:45.52,lon:-122.68},
+  SEA:{n:"Seattle",lat:47.61,lon:-122.33},
+  TAC:{n:"Tacoma",lat:47.25,lon:-122.44},
+  YKM:{n:"Yakima",lat:46.60,lon:-120.51},
+  GEG:{n:"Spokane",lat:47.66,lon:-117.43},
+  BOI:{n:"Boise",lat:43.62,lon:-116.20},
+  BND:{n:"Bend",lat:44.06,lon:-121.31},
+  EUG:{n:"Eugene",lat:44.05,lon:-123.09},
+  MFR:{n:"Medford",lat:42.33,lon:-122.87}
+};
+function proj(c){return {x:30+(c.lon+124.4)/8.6*460, y:30+(48.2-c.lat)/6.4*360};}
+function hav(a,b){var R=3958.8,toR=Math.PI/180,dLat=(b.lat-a.lat)*toR,dLon=(b.lon-a.lon)*toR;var s=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(a.lat*toR)*Math.cos(b.lat*toR)*Math.sin(dLon/2)*Math.sin(dLon/2);return 2*R*Math.asin(Math.sqrt(s));}
+function road(a,b){return hav(CITIES[a],CITIES[b])*1.2;}
+function curve(a,b,bend){var p=proj(CITIES[a]),q=proj(CITIES[b]);var mx=(p.x+q.x)/2,my=(p.y+q.y)/2;var dx=q.x-p.x,dy=q.y-p.y;var cx=mx-dy*bend,cy=my+dx*bend;return "M"+p.x.toFixed(1)+" "+p.y.toFixed(1)+" Q"+cx.toFixed(1)+" "+cy.toFixed(1)+" "+q.x.toFixed(1)+" "+q.y.toFixed(1);}
+
+/* ---------- HERO NETWORK ---------- */
+(function(){
+  var svg=document.getElementById("heroNet");
+  // faint grid
+  var g=el("g",{opacity:"0.18"},svg);
+  for(var x=40;x<520;x+=40)el("line",{x1:x,y1:0,x2:x,y2:420,stroke:"#fff","stroke-width":"0.5"},g);
+  for(var y=40;y<420;y+=40)el("line",{x1:0,y1:y,x2:520,y2:y,stroke:"#fff","stroke-width":"0.5"},g);
+  var dests=["SEA","TAC","YKM","GEG","BOI","BND","EUG","MFR"];
+  var colors=["#FFFFFF","#1A1A1A","#FFD60A","#FFFFFF"];
+  dests.forEach(function(d,i){
+    var path=curve("PDX",d,0.12*(i%2?1:-1));
+    var id="hp"+i;
+    el("path",{id:id,d:path,fill:"none",stroke:"rgba(255,255,255,.45)","stroke-width":"1.6","stroke-dasharray":"4 5"},svg);
+    var dot=el("circle",{r:"5.5",fill:colors[i%colors.length],stroke:"#A8320A","stroke-width":"2"},svg);
+    var am=el("animateMotion",{dur:(4+i*0.7)+"s",repeatCount:"indefinite",begin:(-i*0.9)+"s"},dot);
+    var mp=el("mpath",{},am);mp.setAttributeNS("http://www.w3.org/1999/xlink","href","#"+id);mp.setAttribute("href","#"+id);
+  });
+  Object.keys(CITIES).forEach(function(k){
+    var p=proj(CITIES[k]),hub=k==="PDX";
+    el("circle",{cx:p.x,cy:p.y,r:hub?11:6,fill:hub?"#1A1A1A":"#fff",stroke:hub?"#fff":"#A8320A","stroke-width":hub?3:2},svg);
+    var t=el("text",{x:p.x+(hub?16:10),y:p.y+5,fill:"#fff","font-size":hub?"15":"13","font-weight":hub?"700":"500","font-family":"Instrument Sans, sans-serif"},svg);
+    t.textContent=CITIES[k].n;
+  });
+  if(reduce&&svg.pauseAnimations)svg.pauseAnimations();
+})();
+
+/* ---------- TABS ---------- */
+(function(){
+  var tabs=[].slice.call(document.querySelectorAll(".tab"));
+  function sel(t){tabs.forEach(function(x){var on=x===t;x.setAttribute("aria-selected",on);x.tabIndex=on?0:-1;document.getElementById(x.getAttribute("aria-controls")).hidden=!on;});}
+  tabs.forEach(function(t,i){
+    t.addEventListener("click",function(){sel(t);});
+    t.addEventListener("keydown",function(e){if(e.key==="ArrowRight"||e.key==="ArrowLeft"){var n=tabs[(i+(e.key==="ArrowRight"?1:tabs.length-1))%tabs.length];sel(n);n.focus();}});
+  });
+})();
+
+/* ---------- INVENTORY DASHBOARD ---------- */
+var SKUS=[
+  {sku:"Potato salad 3 lb",d:120,sd:28,lt:4,oh:520,c:6.4},
+  {sku:"Macaroni salad 3 lb",d:85,sd:22,lt:4,oh:690,c:5.9},
+  {sku:"Hummus 10 oz",d:210,sd:55,lt:6,oh:1700,c:2.8},
+  {sku:"Coleslaw 2 lb",d:60,sd:18,lt:5,oh:150,c:4.1},
+  {sku:"Mashed potatoes 24 oz",d:140,sd:30,lt:7,oh:2900,c:3.6},
+  {sku:"Salsa 16 oz",d:95,sd:26,lt:10,oh:1250,c:3.2},
+  {sku:"Bean dip 12 oz",d:40,sd:12,lt:8,oh:1800,c:2.9},
+  {sku:"Guacamole 8 oz",d:175,sd:60,lt:5,oh:200,c:4.8}
+];
+function zFor(p){ // inverse normal for p in (0.5,1)
+  var q=1-p,t=Math.sqrt(-2*Math.log(q));
+  return t-(2.515517+0.802853*t+0.010328*t*t)/(1+1.432788*t+0.189269*t*t+0.001308*t*t*t);
+}
+var ST={
+  crit:{cls:"s-crit",ic:"!",label:"Stockout risk"},
+  warn:{cls:"s-warn",ic:"↻",label:"Reorder now"},
+  ok:{cls:"s-ok",ic:"✓",label:"Healthy"},
+  excess:{cls:"s-excess",ic:"≡",label:"Excess"}
+};
+var COLOR={crit:"#D21F3C",warn:"#B57A00",ok:"#0F8A6E",excess:"#5B4BD6"};
+function statusPill(s){var t=ST[s];return '<span class="status '+t.cls+'"><i aria-hidden="true">'+t.ic+'</i>'+t.label+'</span>';}
+
+function calcInv(){
+  var sl=+document.getElementById("sl").value/100;
+  var add=+document.getElementById("ld").value;
+  var dm=+document.getElementById("dm").value/100;
+  var z=zFor(sl);
+  return SKUS.map(function(s){
+    var d=s.d*(1+dm),sd=s.sd*(1+dm),lt=s.lt+add;
+    var ss=z*sd*Math.sqrt(lt);
+    var rop=d*lt+ss;
+    var cover=s.oh/d;
+    var eoq=Math.sqrt(2*d*365*75/(s.c*0.25));
+    var st=s.oh<=ss?"crit":s.oh<=rop?"warn":cover>30?"excess":"ok";
+    var order=st==="crit"||st==="warn"?Math.max(eoq,rop-s.oh+d*lt):0;
+    return {s:s,d:d,lt:lt,ss:ss,rop:rop,cover:cover,ropDays:rop/d,eoq:eoq,st:st,order:order};
+  });
+}
+function renderInv(){
+  document.getElementById("slOut").textContent=(+document.getElementById("sl").value).toFixed(1)+"%";
+  var ld=+document.getElementById("ld").value;document.getElementById("ldOut").textContent="+"+ld+" days";
+  var dm=+document.getElementById("dm").value;document.getElementById("dmOut").textContent=(dm>0?"+":"")+dm+"%";
+  var R=calcInv();
+  var crit=R.filter(function(r){return r.st==="crit";}),warn=R.filter(function(r){return r.st==="warn";}),exc=R.filter(function(r){return r.st==="excess";});
+  document.getElementById("k1").textContent=crit.length;
+  document.getElementById("k2").textContent=warn.length;
+  document.getElementById("k3").textContent=fmtK(R.reduce(function(a,r){return a+r.ss*r.s.c;},0));
+  document.getElementById("k4").textContent=fmtK(R.reduce(function(a,r){return a+r.s.oh*r.s.c;},0));
+
+  // legend
+  document.getElementById("invLegend").innerHTML=["crit","warn","ok","excess"].map(statusPill).join("");
+
+  // chart: horizontal bars of days of cover, with ROP tick
+  var W=560,rowH=34,top=8,left=170,right=60,H=top+R.length*rowH+26;
+  var max=Math.max(40,Math.ceil(Math.max.apply(null,R.map(function(r){return Math.max(r.cover,r.ropDays);}))/10)*10);
+  var sx=function(v){return left+Math.min(v,max)/max*(W-left-right);};
+  var svg='<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="Days of cover by SKU">';
+  for(var v=0;v<=max;v+=10){svg+='<line x1="'+sx(v)+'" x2="'+sx(v)+'" y1="'+top+'" y2="'+(H-22)+'" stroke="#E6EAF1"/><text x="'+sx(v)+'" y="'+(H-6)+'" font-size="11" text-anchor="middle" fill="#55607A">'+v+'d</text>';}
+  R.forEach(function(r,i){
+    var y=top+i*rowH;
+    svg+='<text x="'+(left-10)+'" y="'+(y+rowH/2+4)+'" font-size="12.5" text-anchor="end" fill="#0E1B3D">'+r.s.sku+'</text>';
+    var w=Math.max(4,sx(r.cover)-left);
+    svg+='<rect class="ibar" data-i="'+i+'" x="'+left+'" y="'+(y+8)+'" width="'+w+'" height="'+(rowH-16)+'" rx="4" fill="'+COLOR[r.st]+'"/>';
+    svg+='<line x1="'+sx(r.ropDays)+'" x2="'+sx(r.ropDays)+'" y1="'+(y+3)+'" y2="'+(y+rowH-3)+'" stroke="#0E1B3D" stroke-width="2.5"/>';
+    svg+='<text x="'+(Math.min(sx(r.cover),W-right)+6)+'" y="'+(y+rowH/2+4)+'" font-size="12" fill="#0E1B3D" font-weight="600">'+r.cover.toFixed(1)+'d</text>';
+    svg+='<rect class="ihit" data-i="'+i+'" x="0" y="'+y+'" width="'+W+'" height="'+rowH+'" fill="transparent"/>';
+  });
+  svg+='</svg>';
+  var host=document.getElementById("invChart");host.innerHTML=svg;
+  [].forEach.call(host.querySelectorAll(".ihit"),function(h){
+    var r=R[+h.getAttribute("data-i")];
+    h.addEventListener("mousemove",function(e){showTip("<b>"+r.s.sku+"</b><br>"+ST[r.st].label+"<br>On hand: "+r.s.oh.toLocaleString()+" units ("+r.cover.toFixed(1)+" days)<br>Reorder point: "+Math.round(r.rop).toLocaleString()+" ("+r.ropDays.toFixed(1)+" days)<br>Safety stock: "+Math.round(r.ss).toLocaleString(),e);});
+    h.addEventListener("mouseleave",hideTip);
+  });
+
+  // table
+  var t='<thead><tr><th>SKU</th><th class="r">Daily demand</th><th class="r">Lead time</th><th class="r">On hand</th><th class="r">Safety stock</th><th class="r">Reorder point</th><th class="r">Suggested order</th><th>Status</th></tr></thead><tbody>';
+  R.forEach(function(r){t+='<tr><td>'+r.s.sku+'</td><td class="r num">'+Math.round(r.d)+'</td><td class="r num">'+r.lt+' d</td><td class="r num">'+r.s.oh.toLocaleString()+'</td><td class="r num">'+Math.round(r.ss).toLocaleString()+'</td><td class="r num">'+Math.round(r.rop).toLocaleString()+'</td><td class="r num">'+(r.order?Math.round(r.order).toLocaleString():"–")+'</td><td>'+statusPill(r.st)+'</td></tr>';});
+  document.getElementById("invTable").innerHTML=t+'</tbody>';
+
+  // brief
+  var b=[];
+  if(crit.length){crit.sort(function(a,c){return a.cover/a.lt-c.cover/c.lt;});var w=crit[0];
+    b.push("<b>Expedite "+w.s.sku+".</b> "+w.cover.toFixed(1)+" days of stock against a "+w.lt+"-day lead time. Place "+Math.round(w.order).toLocaleString()+" units today and ask the supplier for a split or faster shipment.");}
+  if(crit.length>1)b.push("<b>"+(crit.length-1)+" more SKU"+(crit.length>2?"s are":" is")+" below safety stock:</b> "+crit.slice(1).map(function(r){return r.s.sku;}).join(", ")+".");
+  if(warn.length)b.push("<b>Release POs for "+warn.length+" SKU"+(warn.length>1?"s":"")+"</b> that crossed their reorder point ("+warn.map(function(r){return r.s.sku;}).join(", ")+"), about "+fmt$(warn.reduce(function(a,r){return a+r.order*r.s.c;},0))+" in total.");
+  if(exc.length)b.push("<b>Hold orders on "+exc.map(function(r){return r.s.sku;}).join(", ")+".</b> Over 30 days of cover ties up "+fmt$(exc.reduce(function(a,r){return a+(r.s.oh-r.rop)*r.s.c;},0))+" above reorder level, and refrigerated shelf life makes that a waste risk.");
+  var sl=+document.getElementById("sl").value;
+  if(sl<99){var save=SKUS.reduce(function(a,s,i){var d=s.d*(1+dm/100),sd=s.sd*(1+dm/100),lt=s.lt+ld;return a+(zFor(0.99)-zFor(sl/100))*sd*Math.sqrt(lt)*s.c;},0);
+    b.push("Raising service level from "+sl+"% to 99% would add about "+fmt$(save)+" of safety stock across the range.");}
+  if(!b.length)b.push("Everything is inside its reorder band. No action needed today.");
+  document.getElementById("invBrief").innerHTML=b.map(function(x){return "<li>"+x+"</li>";}).join("");
+}
+["sl","ld","dm"].forEach(function(id){document.getElementById(id).addEventListener("input",renderInv);});
+renderInv();
+
+/* ---------- TRANSPORTATION DASHBOARD ---------- */
+var LANES=[
+  {to:"SEA",car:"Cascade Reefer",loads:14,rate:3.10,bench:2.85,otif:96.5},
+  {to:"TAC",car:"Cascade Reefer",loads:9,rate:3.25,bench:2.95,otif:94.0},
+  {to:"YKM",car:"Northline Freight",loads:4,rate:3.40,bench:3.30,otif:91.0},
+  {to:"GEG",car:"Summit Cold Haul",loads:6,rate:2.70,bench:2.80,otif:97.8},
+  {to:"BOI",car:"Summit Cold Haul",loads:5,rate:2.95,bench:2.75,otif:88.5},
+  {to:"BND",car:"Ridgeway Logistics",loads:3,rate:3.60,bench:3.20,otif:93.0},
+  {to:"EUG",car:"Ridgeway Logistics",loads:8,rate:3.80,bench:3.70,otif:98.2},
+  {to:"MFR",car:"Northline Freight",loads:5,rate:3.05,bench:2.90,otif:90.4}
+];
+LANES.forEach(function(l){l.mi=road("PDX",l.to);l.over=(l.rate-l.bench)*l.mi*l.loads;l.pct=(l.rate/l.bench-1)*100;});
+var picked=[],routeOrder=null;
+function laneColor(l,mode,tgt){
+  if(mode==="otif")return l.otif>=tgt?"ok":l.otif>=tgt-3?"warn":"crit";
+  return l.pct<=0?"ok":l.pct<=7?"warn":"crit";
+}
+var LANELBL={otif:{ok:"At or above target",warn:"Within 3 pts of target",crit:"More than 3 pts below"},cost:{ok:"At or below benchmark",warn:"Up to 7% over",crit:"More than 7% over"}};
+function renderTms(){
+  var mode=document.getElementById("lc").value,tgt=+document.getElementById("otifT").value;
+  document.getElementById("otifTOut").textContent=tgt+"%";
+  var tl=LANES.reduce(function(a,l){return a+l.loads;},0);
+  var otif=LANES.reduce(function(a,l){return a+l.otif*l.loads;},0)/tl;
+  var below=LANES.filter(function(l){return l.otif<tgt;});
+  var over=LANES.reduce(function(a,l){return a+Math.max(0,l.over);},0);
+  document.getElementById("t1").textContent=otif.toFixed(1)+"%";
+  document.getElementById("t2").textContent=below.length+" of "+LANES.length;
+  document.getElementById("t3").textContent=fmtK(over);
+  document.getElementById("t4").textContent=tl;
+
+  document.getElementById("mapLegend").innerHTML=["ok","warn","crit"].map(function(s){var t=ST[s];return '<span class="status '+t.cls+'"><i aria-hidden="true">'+t.ic+'</i>'+LANELBL[mode][s]+'</span>';}).join("");
+
+  var svg=document.getElementById("mapSvg");svg.innerHTML="";
+  var g=el("g",{},svg);
+  LANES.forEach(function(l,i){
+    var s=laneColor(l,mode,tgt);
+    var d=curve("PDX",l.to,0.1*(i%2?1:-1));
+    el("path",{d:d,fill:"none",stroke:COLOR[s],"stroke-width":Math.max(2,l.loads/2.2),"stroke-linecap":"round",opacity:"0.9"},g);
+    var hit=el("path",{d:d,fill:"none",stroke:"transparent","stroke-width":"18",style:"cursor:pointer"},g);
+    hit.addEventListener("mousemove",function(e){showTip("<b>Portland DC → "+CITIES[l.to].n+"</b><br>"+l.car+"<br>"+l.loads+" loads/wk, "+Math.round(l.mi)+" mi<br>OTIF "+l.otif+"%<br>$"+l.rate.toFixed(2)+"/mi vs $"+l.bench.toFixed(2)+" benchmark",e);});
+    hit.addEventListener("mouseleave",hideTip);
+  });
+  if(routeOrder){
+    var pts=["PDX"].concat(routeOrder).concat(["PDX"]).map(function(k){var p=proj(CITIES[k]);return p.x.toFixed(1)+","+p.y.toFixed(1);});
+    el("polyline",{points:pts.join(" "),fill:"none",stroke:"#1A1A1A","stroke-width":"3.5","stroke-dasharray":"8 6","stroke-linejoin":"round"},g);
+    routeOrder.forEach(function(k,i){var p=proj(CITIES[k]);el("circle",{cx:p.x,cy:p.y-18,r:10,fill:"#1A1A1A"},g);var t=el("text",{x:p.x,y:p.y-14,"text-anchor":"middle","font-size":"12","font-weight":"700",fill:"#fff"},g);t.textContent=i+1;});
+  }
+  Object.keys(CITIES).forEach(function(k){
+    var p=proj(CITIES[k]),hub=k==="PDX",on=picked.indexOf(k)>-1;
+    el("circle",{cx:p.x,cy:p.y,r:hub?10:6,fill:hub?"#D73F09":on?"#1A1A1A":"#fff",stroke:"#0E1B3D","stroke-width":"2"},g);
+    var t=el("text",{x:p.x+(hub?14:10),y:p.y+4,"font-size":"12.5","font-weight":hub?"700":"500",fill:"#0E1B3D","paint-order":"stroke",stroke:"#F4F6FB","stroke-width":"3"},g);t.textContent=CITIES[k].n;
+  });
+
+  var t='<thead><tr><th>Lane</th><th>Carrier</th><th class="r">Loads/wk</th><th class="r">Miles</th><th class="r">OTIF</th><th class="r">Rate/mi</th><th class="r">Benchmark</th><th class="r">Weekly over/(under)</th><th>Status</th></tr></thead><tbody>';
+  LANES.slice().sort(function(a,b){return a.otif-b.otif;}).forEach(function(l){var s=laneColor(l,mode,tgt);
+    t+='<tr><td>PDX → '+CITIES[l.to].n+'</td><td>'+l.car+'</td><td class="r num">'+l.loads+'</td><td class="r num">'+Math.round(l.mi)+'</td><td class="r num">'+l.otif.toFixed(1)+'%</td><td class="r num">$'+l.rate.toFixed(2)+'</td><td class="r num">$'+l.bench.toFixed(2)+'</td><td class="r num">'+(l.over>=0?fmt$(l.over):"("+fmt$(-l.over)+")")+'</td><td><span class="status '+ST[s].cls+'"><i aria-hidden="true">'+ST[s].ic+'</i>'+LANELBL[mode][s]+'</span></td></tr>';});
+  document.getElementById("laneTable").innerHTML=t+'</tbody>';
+
+  // brief
+  var b=[];
+  var worst=LANES.slice().sort(function(a,c){return a.otif-c.otif;})[0];
+  if(worst.otif<tgt)b.push("<b>"+worst.car+" on Portland → "+CITIES[worst.to].n+"</b> is the weakest lane at "+worst.otif+"% OTIF, "+(tgt-worst.otif).toFixed(1)+" pts under target. Request a root-cause review and put a backup carrier on the routing guide.");
+  var byCar={};LANES.forEach(function(l){byCar[l.car]=byCar[l.car]||{over:0,loads:0,ot:0};byCar[l.car].over+=l.over;byCar[l.car].loads+=l.loads;byCar[l.car].ot+=l.otif*l.loads;});
+  var cars=Object.keys(byCar).sort(function(a,c){return byCar[c].over-byCar[a].over;});
+  if(byCar[cars[0]].over>0)b.push("<b>Renegotiate with "+cars[0]+".</b> Their lanes run "+fmt$(byCar[cars[0]].over)+"/week over benchmark, about "+fmt$(byCar[cars[0]].over*52)+" a year.");
+  var good=LANES.filter(function(l){return l.pct<0&&l.otif>=tgt;});
+  if(good.length)b.push("<b>Reward "+good.map(function(l){return l.car+" ("+CITIES[l.to].n+")";}).join(", ")+":</b> under benchmark and on target. Offer more volume in exchange for a rate lock.");
+  if(below.length>1)b.push(below.length+" lanes are below the "+tgt+"% OTIF target, carrying "+below.reduce(function(a,l){return a+l.loads;},0)+" of "+tl+" weekly loads.");
+  if(!b.length)b.push("All lanes are on target and priced at or under market. Keep the current routing guide.");
+  document.getElementById("tmsBrief").innerHTML=b.map(function(x){return "<li>"+x+"</li>";}).join("");
+}
+function tourLen(order){var p=["PDX"].concat(order).concat(["PDX"]),s=0;for(var i=0;i<p.length-1;i++)s+=road(p[i],p[i+1]);return s;}
+function optimize(stops){
+  // nearest neighbour then 2-opt
+  var left=stops.slice(),cur="PDX",ord=[];
+  while(left.length){left.sort(function(a,b){return road(cur,a)-road(cur,b);});cur=left.shift();ord.push(cur);}
+  var improved=true;
+  while(improved){improved=false;
+    for(var i=0;i<ord.length-1;i++)for(var j=i+1;j<ord.length;j++){
+      var n=ord.slice(0,i).concat(ord.slice(i,j+1).reverse()).concat(ord.slice(j+1));
+      if(tourLen(n)+0.01<tourLen(ord)){ord=n;improved=true;}
+    }}
+  return ord;
+}
+(function(){
+  var host=document.getElementById("stopPick");
+  Object.keys(CITIES).filter(function(k){return k!=="PDX";}).forEach(function(k){
+    var lab=document.createElement("label");var cb=document.createElement("input");cb.type="checkbox";cb.value=k;
+    cb.addEventListener("change",function(){if(cb.checked)picked.push(k);else picked.splice(picked.indexOf(k),1);routeOrder=null;document.getElementById("routeOut").textContent=picked.length?"Picked order: "+picked.map(function(x){return CITIES[x].n;}).join(" → "):"";renderTms();});
+    lab.appendChild(cb);lab.appendChild(document.createTextNode(CITIES[k].n));host.appendChild(lab);
+  });
+  document.getElementById("optBtn").addEventListener("click",function(){
+    var out=document.getElementById("routeOut");
+    if(picked.length<2){out.textContent="Pick at least two stops to sequence.";return;}
+    var before=tourLen(picked);routeOrder=optimize(picked);var after=tourLen(routeOrder);
+    var saved=before-after;
+    out.innerHTML="<b>Optimized:</b> Portland DC → "+routeOrder.map(function(x){return CITIES[x].n;}).join(" → ")+" → Portland DC. <b>"+Math.round(after)+" mi</b> round trip"+(saved>1?", "+Math.round(saved)+" mi ("+Math.round(saved/before*100)+"%) shorter than your order, about "+fmt$(saved*3.1)+" saved at $3.10/mi.":", already the shortest order.");
+    renderTms();
+  });
+  document.getElementById("clrBtn").addEventListener("click",function(){picked=[];routeOrder=null;[].forEach.call(host.querySelectorAll("input"),function(c){c.checked=false;});document.getElementById("routeOut").textContent="";renderTms();});
+})();
+["lc","otifT"].forEach(function(id){document.getElementById(id).addEventListener("input",renderTms);});
+renderTms();
+
+/* ---------- LINKEDIN POSTS (auto-moving carousel) ----------
+   To add a post: copy its link on LinkedIn and add an entry below. Newest first. */
+var POSTS=[
+  {author:"Vedant Rasane",init:"VR",date:"Recent",kicker:"Milestone",title:"Commencement day at Oregon State",text:"",tags:["#OregonState","#SupplyChain"],url:"https://lnkd.in/p/g6Tjh3Ya",style:"feat",img:"posts/post1.jpg",pos:"50% 31%"},
+  {author:"Vedant Rasane",init:"VR",date:"Dec 5, 2025",kicker:"VP, Startup Hub at OSU",title:"Reviving Startup Hub at OSU",text:"",tags:[],url:"https://www.linkedin.com/feed/update/urn:li:activity:7402558289609162752",style:"",img:"posts/post2.jpg",pos:"50% 55%"},
+  {author:"Vedant Rasane",init:"VR",date:"Nov 6, 2025",kicker:"VP, Startup Hub at OSU",title:"Our relaunch kickoff: student founder panel",text:"",tags:[],url:"https://www.linkedin.com/feed/update/urn:li:activity:7392287535785299969",style:"dark",img:"posts/post3.jpg",pos:"50% 50%"},
+  {author:"Alyssa Frappier",init:"AF",date:"Jun 25, 2025",kicker:"Reser's internship",title:"Reser's 2025 intern class lunch &amp; learn",text:"",tags:["#ResersInternship","#LunchAndLearn","#ResersCares"],url:"https://www.linkedin.com/posts/alyssafrappier_resersinternship-lunchandlearn-reserscares-ugcPost-7343762585013362688-G0Lv",style:"",img:"posts/post4.jpg",pos:"50% 60%"},
+  {author:"Supply Chain Club at OSU",init:"SC",date:"May 3, 2025",kicker:"Industry visit",title:"Oregon State's Supply Chain Club at Nike HQ",text:"",tags:["#Nike","#NikeHQ","#OregonStateUniversity"],url:"https://www.linkedin.com/posts/supply-chain-club-at-osu_nike-nikehq-oregonstateuniversity-activity-7324262496796647424-dx1G",style:"feat",img:"posts/post5.jpg",pos:"50% 60%"}
+];
+(function(){
+  var track=document.getElementById("postTrack"),dotsEl=document.getElementById("postDots");
+  POSTS.forEach(function(p){
+    var a=document.createElement("article");a.className="post"+(p.style?" "+p.style:"");
+    a.innerHTML=(p.img?'<div class="shot"><img src="'+p.img+'" alt="Photo from the LinkedIn post: '+p.title.replace(/&amp;/g,"and")+'" loading="lazy" style="object-position:'+(p.pos||"50% 50%")+'"></div>':'')+'<div class="who"><span class="av">'+p.init+'</span><div>'+p.author+'<div class="date">'+p.date+'</div></div></div>'+
+      '<div class="kicker">'+p.kicker+'</div><h3>'+p.title+'</h3>'+(p.text?'<p>'+p.text+'</p>':'')+
+      (p.tags.length?'<div class="tags">'+p.tags.map(function(t){return "<span>"+t+"</span>";}).join("")+'</div>':'')+
+      '<a class="read" href="'+p.url+'" target="_blank" rel="noopener">Read on LinkedIn</a>';
+    track.appendChild(a);
+  });
+  var idx=0,timer=null,paused=reduce;
+  function perView(){return innerWidth<=600?1:innerWidth<=900?2:3;}
+  function maxIdx(){return Math.max(0,POSTS.length-perView());}
+  function buildDots(){dotsEl.innerHTML="";for(var i=0;i<=maxIdx();i++){(function(i){var b=document.createElement("button");b.type="button";b.setAttribute("aria-label","Go to post "+(i+1));b.addEventListener("click",function(){go(i);restart();});dotsEl.appendChild(b);})(i);}}
+  function go(i){var m=maxIdx();idx=i>m?0:i<0?m:i;var card=track.children[0];var step=card.getBoundingClientRect().width+18;track.style.transform="translateX("+(-idx*step)+"px)";[].forEach.call(dotsEl.children,function(d,j){d.setAttribute("aria-current",j===idx);});}
+  function restart(){clearInterval(timer);if(!paused)timer=setInterval(function(){go(idx+1);},3800);}
+  document.getElementById("nextP").addEventListener("click",function(){go(idx+1);restart();});
+  document.getElementById("prevP").addEventListener("click",function(){go(idx-1);restart();});
+  var pp=document.getElementById("ppP");pp.textContent=paused?"Play":"Pause";
+  pp.addEventListener("click",function(){paused=!paused;pp.textContent=paused?"Play":"Pause";restart();});
+  var car=track.closest(".carousel");
+  car.addEventListener("mouseenter",function(){clearInterval(timer);});
+  car.addEventListener("mouseleave",restart);
+  car.addEventListener("focusin",function(){clearInterval(timer);});
+  car.addEventListener("focusout",restart);
+  addEventListener("resize",function(){buildDots();go(Math.min(idx,maxIdx()));});
+  buildDots();go(0);restart();
+})();
+})();
+</script>
+</body>
+</html>
