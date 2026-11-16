@@ -2,6 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MDE1J7SNZ3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-MDE1J7SNZ3');
+</script>
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vedant Rasane Portfolio</title>
 <meta name="description" content="Vedant Rasane, supply chain analyst. MS Supply Chain Analytics, Oregon State University. Transportation, inventory and procurement analytics.">
@@ -973,6 +982,29 @@ var POSTS=[
   car.addEventListener("focusout",restart);
   addEventListener("resize",function(){buildDots();go(Math.min(idx,maxIdx()));});
   buildDots();go(0);restart();
+})();
+
+/* ---------- Analytics: clicks and sections reached ---------- */
+(function(){
+  function ev(name,params){try{if(window.gtag)gtag('event',name,params||{});}catch(e){}}
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('a,button');if(!a)return;
+    var href=a.getAttribute('href')||'';
+    if(href.indexOf('mailto:')===0)ev('contact_email_click');
+    else if(href.indexOf('linkedin.com/in/')>-1)ev('linkedin_profile_click',{location:a.closest('nav')?'menu':'contact'});
+    else if(href.indexOf('linkedin.com')>-1||href.indexOf('lnkd.in')>-1){var c=a.closest('.post');ev('linkedin_post_click',{post_title:c?(c.querySelector('h3')||{}).textContent:''});}
+    else if(a.classList.contains('tab'))ev('dashboard_tab',{tab:a.textContent.trim()});
+    else if(a.id==='optBtn')ev('route_optimizer_used');
+    else if(href==='#lab')ev('cta_dashboards_click');
+    else if(href==='#experience')ev('cta_experience_click');
+  });
+  var usedSlider=false;
+  document.querySelectorAll('#lab input[type=range], #lab select').forEach(function(x){x.addEventListener('change',function(){if(!usedSlider){usedSlider=true;ev('dashboard_interaction',{control:x.id});}});});
+  if('IntersectionObserver' in window){
+    var seen={};
+    var io=new IntersectionObserver(function(es){es.forEach(function(en){var id=en.target.id;if(en.isIntersecting&&!seen[id]){seen[id]=1;ev('section_view',{section:id});io.unobserve(en.target);}});},{threshold:0.35});
+    ['achievements','about','experience','lab','plugins','posts','projects','education','contact'].forEach(function(id){var el=document.getElementById(id);if(el)io.observe(el);});
+  }
 })();
 })();
 </script>
