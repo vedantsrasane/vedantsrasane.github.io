@@ -269,6 +269,21 @@ table.data tr:hover td{background:#F7F9FC}
 .post iframe{width:100%;border:0;border-radius:8px;min-height:420px;background:#fff}
 
 /* ---------- projects ---------- */
+.proj-list>*,.proj-feature>*{min-width:0}
+.proj-feature{grid-column:1/-1;min-width:0;background:var(--navy);color:#fff;border-radius:var(--r-lg);padding:34px;margin:0 0 28px;display:grid;grid-template-columns:1.05fr 1fr;gap:34px}
+.proj-feature .k{color:#FF7A45;font-size:13.5px;font-weight:700}
+.proj-feature h3{font-size:44px;font-weight:800;margin:8px 0 6px;letter-spacing:-0.03em}
+.proj-feature .tagline{font-size:18px;font-weight:600;color:#fff;margin:0 0 14px}
+.proj-feature p{color:rgba(255,255,255,.82);font-size:15.5px}
+.proj-feature .pstatus{display:inline-block;background:rgba(255,255,255,.12);color:#fff;font-size:13px;font-weight:600;padding:5px 12px;border-radius:999px;margin-top:4px}
+.proj-feature .chips .chip{background:transparent;color:#fff;border-color:rgba(255,255,255,.3);font-size:13.5px}
+.proj-feature ol{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.proj-feature li{background:rgba(255,255,255,.07);border-radius:var(--r-md);padding:12px 14px 12px 52px;position:relative;font-size:14.5px;color:rgba(255,255,255,.85)}
+.proj-feature li b{display:block;color:#fff;font-size:15.5px;margin-bottom:2px}
+.proj-feature li::before{counter-increment:st;content:counter(st);position:absolute;left:14px;top:13px;width:26px;height:26px;border-radius:50%;background:var(--orange);color:#fff;font-weight:800;font-size:14px;display:grid;place-items:center}
+.proj-feature ol{counter-reset:st}
+.proj-feature .measures{font-size:14px;color:rgba(255,255,255,.7);margin-top:14px}
+@media (max-width:900px){.proj-feature{grid-template-columns:1fr;padding:24px}.proj-feature h3{font-size:34px}}
 .proj-list{display:grid;grid-template-columns:repeat(2,1fr);gap:0 40px}
 .proj{padding:24px 0;border-top:1px solid var(--line)}
 .proj .k{font-size:13.5px;font-weight:700;color:var(--orange)}
@@ -649,9 +664,28 @@ footer{background:#000;color:rgba(255,255,255,.7);font-size:14px;padding:22px 0}
   <div class="wrap">
     <div class="head">
       <h2>Selected projects</h2>
-      <p>Graduate work at Oregon State, each built on a real operating question.</p>
+      <p>My latest build first, then graduate work at Oregon State, each one built on a real operating question.</p>
     </div>
     <div class="proj-list">
+      <article class="proj-feature" id="inventra">
+        <div>
+          <div class="k">Latest project, healthcare supply chain + AI</div>
+          <h3>INVENTRA AI</h3>
+          <p class="tagline">Intelligent inventory and supply chain operations platform for hospitals.</p>
+          <p>Hospitals track thousands of medical supplies across departments, often in separate systems or by hand. That makes shortages hard to spot early, and it leads to urgent purchasing, expired stock and receiving errors.</p>
+          <p>INVENTRA AI brings inventory visibility, demand forecasting and workflow support into one place, with an AI assistant that explains exceptions and helps staff take the next step. It supports materials managers, buyers and receiving teams. It doesn't replace them.</p>
+          <div class="chips" style="margin:14px 0 6px"><span class="chip">PAR and reorder points</span><span class="chip">Demand forecasting</span><span class="chip">Replenishment</span><span class="chip">PO and receiving checks</span><span class="chip">Expiry alerts</span><span class="chip">AI assistant</span></div>
+          <p class="measures">Pilot measures: stockout frequency, record accuracy, expired stock, emergency purchases, receiving discrepancies, time on routine tasks, forecast error.</p>
+          <span class="pstatus">Prototype in progress. Results will be measured against a baseline.</span>
+        </div>
+        <ol>
+          <li><b>Connect operational data</b>Item master, on-hand stock, usage history, suppliers, lead times, POs and receiving records.</li>
+          <li><b>Monitor and predict</b>Track stock against PAR and reorder levels, forecast demand, flag shortages, unusual usage, excess and expiring items.</li>
+          <li><b>Recommend and prepare</b>Suggest reorder quantities and priorities, and draft requisitions and receiving checklists.</li>
+          <li><b>Verify and coordinate</b>Match deliveries to POs and packing slips, flag mismatches and assign follow-up tasks.</li>
+          <li><b>Ask and act with oversight</b>Staff ask questions in plain language, see why a recommendation was made, and approve changes first.</li>
+        </ol>
+      </article>
       <article class="proj"><div class="k">Capstone, network and TCO</div><h3>Laundry insourcing feasibility and TCO</h3><p>TCO, facility location and route model comparing CINTAS uniform service with in-house laundry for OSU Housing &amp; Dining. Cut uniform PAR levels <b>45%</b>, from 11 to 6 per employee, without losing coverage.</p></article>
       <article class="proj"><div class="k">Capstone, demand and inventory</div><h3>Tacovore demand planning</h3><p>SKU-level forecasts from sales and purchasing data, redesigned PAR levels and order timing, and flagged spoilage risk on high-velocity perishables like avocado.</p></article>
       <article class="proj"><div class="k">SQL, Power BI</div><h3>Supplier performance and procurement tracker</h3><p>SQL queries and Power BI dashboards for purchase orders, supplier KPIs, fill rates and delivery risk across a simulated multi-tier supply chain.</p></article>
