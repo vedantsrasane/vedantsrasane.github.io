@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Bakery Ingredient Sentinel — concept demo by Vedant Rasane</title>
+<style>
+  :root {
+    color-scheme: light;
+    --surface-0: #f5f4f0;
+    --surface-1: #fcfcfb;
+    --border: #e3e1da;
+    --grid: #ecebe6;
+    --text-primary: #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted: #7a7974;
+    --accent: #2a78d6;
+    --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100;
+    --r1: #2a78d6; --r2: #eda100; --r3: #1baf7a; --r4: #e87ba4;
+    --good: #0ca30c; --warning: #fab219; --serious: #ec835a; --critical: #d03b3b;
+    --band: #cde2fb;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--surface-0); color: var(--text-primary);
+    font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 28px 20px 48px; }
+  header h1 { font-size: 26px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  header p { margin: 0; color: var(--text-secondary); max-width: 780px; }
+  .notice { margin: 14px 0 18px; padding: 10px 14px; border: 1px solid #f1d58a; background: #fff8e3; border-radius: 8px; color: #5c4a10; font-size: 13px; }
+  .notice b { color: #3d3108; }
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 18px; }
+  .tab { background: none; border: 0; padding: 10px 14px; font: inherit; font-weight: 600; color: var(--text-secondary); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .tab[aria-selected="true"] { color: var(--text-primary); border-bottom-color: var(--accent); }
+  .panel[hidden] { display: none; }
+  .grid { display: grid; gap: 14px; }
+  .g-side { grid-template-columns: 290px 1fr; }
+  .g-2 { grid-template-columns: 1fr 1fr; }
+  @media (max-width: 900px) { .g-side, .g-2 { grid-template-columns: 1fr; } }
+  .card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 16px; min-width: 0; }
+  .card h2 { font-size: 15px; margin: 0 0 2px; }
+  .card .sub { color: var(--text-secondary); font-size: 12.5px; margin: 0 0 12px; }
+  .ctrl { margin-bottom: 14px; }
+  .ctrl label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .ctrl label span { font-weight: 500; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+  .ctrl input[type=range] { width: 100%; accent-color: var(--accent); }
+  .ctrl .hint { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+  .seg { display: flex; border: 1px solid var(--border); border-radius: 7px; overflow: hidden; }
+  .seg button { flex: 1; border: 0; background: var(--surface-1); padding: 6px 0; font: inherit; font-size: 12.5px; cursor: pointer; color: var(--text-secondary); }
+  .seg button + button { border-left: 1px solid var(--border); }
+  .seg button[aria-pressed="true"] { background: #e8f1fc; color: #184f95; font-weight: 600; }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px; }
+  @media (max-width: 700px) { .kpis { grid-template-columns: repeat(2, 1fr); } }
+  .kpi { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+  .kpi .k { font-size: 12px; color: var(--text-secondary); }
+  .kpi .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+  .kpi .v small { font-size: 13px; font-weight: 500; color: var(--text-secondary); }
+  .kpi .d { font-size: 12px; color: var(--text-muted); }
+  .pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 600; padding: 1px 8px; border-radius: 999px; }
+  .pill i { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+  .brief { border-left: 3px solid var(--accent); }
+  .brief ul { margin: 6px 0 0; padding-left: 18px; }
+  .brief li { margin: 5px 0; }
+  .brief .tag { font-size: 11px; color: var(--text-muted); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+  th { text-align: left; font-weight: 600; color: var(--text-secondary); font-size: 12px; border-bottom: 1px solid var(--border); padding: 6px 8px; }
+  td { padding: 6px 8px; border-bottom: 1px solid var(--grid); }
+  td.n, th.n { text-align: right; }
+  .legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 12px; color: var(--text-secondary); margin: 4px 0 6px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend i { width: 12px; height: 3px; border-radius: 2px; display: inline-block; }
+  .legend i.sq { height: 10px; width: 10px; border-radius: 3px; }
+  svg text { font-family: inherit; }
+  .chart { width: 100%; display: block; }
+  .tip { position: fixed; pointer-events: none; background: #1a1a19; color: #f0efec; font-size: 12px; padding: 7px 9px; border-radius: 6px; box-shadow: 0 4px 14px rgba(0,0,0,.18); z-index: 10; display: none; max-width: 260px; line-height: 1.4; }
+  .tip b { color: #fff; }
+  .muted { color: var(--text-muted); font-size: 12px; }
+  .foot { margin-top: 26px; color: var(--text-secondary); font-size: 12.5px; border-top: 1px solid var(--border); padding-top: 14px; }
+  .foot a { color: #1c5cab; }
+  .q { margin: 6px 0 0; padding-left: 18px; }
+  .q li { margin: 4px 0; }
+  details summary { cursor: pointer; font-weight: 600; font-size: 13px; color: var(--text-secondary); }
+  .sw { display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:6px; vertical-align:-1px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Bakery Ingredient Sentinel</h1>
+    <p>A concept demo for a central bakery that supplies its cafés. It looks at two issues raised during my visit to Tatte's Old Colony Ave bakery: occasional raspberry shortages that end in emergency grocery runs, and the challenge of assigning drivers across four delivery routes.</p>
+  </header>
+  <div class="notice"><b>Sample data only.</b> Every quantity, recipe amount, lead time, shelf life and route time below is made up for illustration. None of it is Tatte data. Café addresses on the Routes tab come from public listings and may be out of date; the four-route split is my own illustration, not Tatte's actual routes.</div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-tab="rasp">Raspberries: stockout vs. spoilage</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="routes">Delivery routes</button>
+  </div>
+
+  <!-- ================= RASPBERRY TAB ================= -->
+  <section class="panel" id="panel-rasp">
+    <div class="grid g-side">
+      <div class="card">
+        <h2>Planning settings</h2>
+        <p class="sub">Move these and every number on the page updates.</p>
+        <div class="ctrl">
+          <label>Deliveries per week</label>
+          <div class="seg" id="freq">
+            <button data-v="2">2×</button><button data-v="3" aria-pressed="true">3×</button><button data-v="6">6×</button><button data-v="7">Daily</button>
+          </div>
+          <div class="hint" id="freqHint"></div>
+        </div>
+        <div class="ctrl">
+          <label for="lead">Supplier lead time <span id="leadV"></span></label>
+          <input type="range" id="lead" min="1" max="3" step="1" value="1">
+          <div class="hint">Days between placing an order and receiving it.</div>
+        </div>
+        <div class="ctrl">
+          <label for="shelf">Usable shelf life <span id="shelfV"></span></label>
+          <input type="range" id="shelf" min="2" max="6" step="1" value="3">
+          <div class="hint">Days a delivery stays good enough to bake with.</div>
+        </div>
+        <div class="ctrl">
+          <label for="buf">Safety buffer <span id="bufV"></span></label>
+          <input type="range" id="buf" min="0" max="2" step="0.25" value="0.5">
+          <div class="hint">Extra stock ordered, in days of average use.</div>
+        </div>
+        <div class="ctrl">
+          <label for="chg">Demand change <span id="chgV"></span></label>
+          <input type="range" id="chg" min="-20" max="40" step="5" value="0">
+        </div>
+        <div class="ctrl">
+          <label for="cv">Day-to-day variability <span id="cvV"></span></label>
+          <input type="range" id="cv" min="5" max="40" step="5" value="20">
+          <div class="hint">How much daily use swings around its weekday average.</div>
+        </div>
+        <p class="muted">Each setting is tested over 400 simulated 4-week periods with random day-to-day demand, first-in-first-out use, and stock thrown out when it passes its shelf life.</p>
+      </div>
+
+      <div>
+        <div class="kpis" id="kpis"></div>
+        <div class="card brief" style="margin-bottom:14px">
+          <h2>Morning brief for the bakery manager</h2>
+          <p class="sub">Generated from rules in this demo. In a live tool, an AI assistant would write it from the same numbers, and the manager stays in charge of every order.</p>
+          <ul id="brief"></ul>
+        </div>
+        <div class="card">
+          <h2>Raspberries on hand at end of day, next two weeks</h2>
+          <p class="sub" id="fanSub"></p>
+          <div class="legend"><span><i style="background:var(--s1)"></i>Typical (median)</span><span><i class="sq" style="background:var(--band)"></i>Likely range (8 in 10 periods)</span><span><i class="sq" style="background:#cfcdc6;width:3px;height:10px"></i>Delivery day</span></div>
+          <div id="fan"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid g-2" style="margin-top:14px">
+      <div class="card">
+        <h2>The trade-off: emergency runs</h2>
+        <p class="sub">Grocery runs per 4 weeks by safety buffer, one line per delivery schedule. The ringed point is your current setting.</p>
+        <div class="legend" id="tradeLegend1"></div>
+        <div id="tradeA"></div>
+      </div>
+      <div class="card">
+        <h2>The trade-off: raspberries thrown out</h2>
+        <p class="sub">Kilograms spoiled per 4 weeks for the same settings. A bigger buffer prevents shortages but spoils more fruit.</p>
+        <div class="legend" id="tradeLegend2"></div>
+        <div id="tradeB"></div>
+      </div>
+    </div>
+
+    <div class="grid g-2" style="margin-top:14px">
+      <div class="card">
+        <h2>Raspberries needed by weekday</h2>
+        <p class="sub">Average kilograms per day from four example products (sample recipes), at the current demand setting.</p>
+        <div class="legend" id="dowLegend"></div>
+        <div id="dow"></div>
+      </div>
+      <div class="card">
+        <h2>Next week's plan, day by day</h2>
+        <p class="sub">Typical values across the simulated periods.</p>
+        <div id="planTable"></div>
+        <details style="margin-top:12px"><summary>Example products and sample recipe amounts</summary><div id="prodTable" style="margin-top:8px"></div></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ROUTES TAB ================= -->
+  <section class="panel" id="panel-routes" hidden>
+    <div class="grid g-side">
+      <div class="card">
+        <h2>Route settings</h2>
+        <p class="sub">Sample assumptions. Real values would come from drivers and route logs.</p>
+        <div class="ctrl">
+          <label for="stopMin">Minutes per stop <span id="stopMinV"></span></label>
+          <input type="range" id="stopMin" min="6" max="25" step="1" value="12">
+          <div class="hint">Unloading, check-in and paperwork at a typical café.</div>
+        </div>
+        <div class="ctrl">
+          <label for="dtExtra">Extra minutes downtown <span id="dtExtraV"></span></label>
+          <input type="range" id="dtExtra" min="0" max="20" step="1" value="8">
+          <div class="hint">Parking, loading-dock waits and carrying in at dense stops.</div>
+        </div>
+        <div class="ctrl">
+          <label for="speed">Average suburban speed <span id="speedV"></span></label>
+          <input type="range" id="speed" min="18" max="40" step="1" value="28">
+          <div class="hint">In-city legs use slower speeds automatically.</div>
+        </div>
+        <p class="muted">Stop order uses a simple nearest-next-café rule from the bakery and back. Road miles are estimated as straight-line distance × 1.35.</p>
+      </div>
+      <div>
+        <div class="kpis" id="rkpis"></div>
+        <div class="card">
+          <h2>Illustrative 4-route split from 60 Old Colony Ave</h2>
+          <p class="sub">Massachusetts cafés from public listings, grouped by area. Locations are approximate; hover a stop for details.</p>
+          <div class="legend" id="mapLegend"></div>
+          <div id="map"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid g-2" style="margin-top:14px">
+      <div class="card">
+        <h2>Estimated hours per route</h2>
+        <p class="sub">Driving vs. time at stops. The dashed line is the average across routes.</p>
+        <div class="legend"><span><i class="sq" style="background:var(--s1)"></i>Driving</span><span><i class="sq" style="background:var(--s2)"></i>At stops</span></div>
+        <div id="hours"></div>
+      </div>
+      <div class="card">
+        <h2>Route comparison</h2>
+        <p class="sub">Some routes are short on miles but slow at every stop; others are mostly highway. Both can feel unfair for different reasons.</p>
+        <div id="routeTable"></div>
+      </div>
+    </div>
+
+    <div class="grid g-2" style="margin-top:14px">
+      <div class="card">
+        <h2>One option: a 4-week rotation</h2>
+        <p class="sub">If the gap comes from the routes themselves, rotating them spreads the hard ones evenly. Each driver's 4-week average becomes the same.</p>
+        <div id="rotation"></div>
+      </div>
+      <div class="card">
+        <h2>Before changing anything: ask the drivers</h2>
+        <p class="sub">This model only guesses at workload. The drivers know what actually makes a route hard.</p>
+        <ul class="q">
+          <li>Which stops take longest, and why (parking, docks, stairs, waiting for staff)?</li>
+          <li>Which delivery windows are hardest to hit?</li>
+          <li>How do start times and traffic affect each route?</li>
+          <li>Is the issue the hours, the physical load, the vehicle, or something else?</li>
+          <li>What would make the assignment feel fair?</li>
+        </ul>
+        <p class="muted" style="margin-top:10px">A few weeks of route logs (start/finish times, stops completed, on-time arrivals) would turn this sketch into real numbers.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="foot">
+    Concept demo by <b>Vedant Rasane</b>, M.S. Supply Chain Analytics, Oregon State University ·
+    <a href="https://vedantsrasane.github.io/">Portfolio</a> · <a href="https://www.linkedin.com/in/vedantsrasane/">LinkedIn</a><br>
+    Built as an illustration only. It does not use, and is not based on, any Tatte operating data. Café locations are from public listings (DoorDash, LinkedIn, Time Out and others) as of November 2026.
+  </div>
+</div>
+<div class="tip" id="tip"></div>
+
+<script>
+/* ===================== helpers ===================== */
+const $ = s => document.querySelector(s);
+const DOW = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const DOWL = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const fmt = (x, d=1) => (Math.round(x * 10**d) / 10**d).toLocaleString(undefined, {minimumFractionDigits: d, maximumFractionDigits: d});
+const tip = $('#tip');
+function showTip(html, ev) { tip.innerHTML = html; tip.style.display = 'block'; moveTip(ev); }
+function moveTip(ev) { const w = tip.offsetWidth, h = tip.offsetHeight; let x = ev.clientX + 14, y = ev.clientY + 14; if (x + w > innerWidth - 8) x = ev.clientX - w - 14; if (y + h > innerHeight - 8) y = ev.clientY - h - 14; tip.style.left = x + 'px'; tip.style.top = y + 'px'; }
+function hideTip() { tip.style.display = 'none'; }
+function svgEl(tag, attrs = {}, parent) { const e = document.createElementNS('http://www.w3.org/2000/svg', tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+function niceScale(v) { if (v <= 0) v = 1; const raw = v / 5, p = 10 ** Math.floor(Math.log10(raw)); let step = p; for (const m of [1, 2, 5, 10]) if (m * p >= raw) { step = m * p; break; } const max = Math.ceil(v / step - 1e-9) * step; return { max, step, n: Math.round(max / step), dp: step < 1 ? 1 : 0 }; }
+function niceMax(v) { if (v <= 0) return 1; const p = 10 ** Math.floor(Math.log10(v)); for (const m of [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]) if (m * p >= v) return m * p; return 10 * p; }
+function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function quantile(arr, q) { const s = [...arr].sort((a, b) => a - b); const i = (s.length - 1) * q, lo = Math.floor(i), hi = Math.ceil(i); return s[lo] + (s[hi] - s[lo]) * (i - lo); }
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+/* ===================== tabs ===================== */
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x === t));
+  $('#panel-rasp').hidden = t.dataset.tab !== 'rasp';
+  $('#panel-routes').hidden = t.dataset.tab !== 'routes';
+  if (t.dataset.tab === 'routes') renderRoutes(); else renderRasp();
+}));
+
+/* ===================== RASPBERRY MODEL ===================== */
+// Example products — names are generic, quantities are invented.
+const PRODUCTS = [
+  { name: 'Raspberry tea cake', g: 25, units: [40, 38, 40, 42, 55, 80, 75] },
+  { name: 'Raspberry pavlova', g: 40, units: [20, 18, 20, 22, 30, 45, 40] },
+  { name: 'Overnight oats with raspberry', g: 20, units: [35, 35, 35, 35, 30, 20, 18] },
+  { name: 'Brunch French toast topping', g: 30, units: [10, 10, 10, 12, 15, 50, 48] },
+];
+const SCHED = { 2: [0, 3], 3: [0, 2, 4], 6: [0, 1, 2, 3, 4, 5], 7: [0, 1, 2, 3, 4, 5, 6] };
+const SCHED_NAME = { 2: 'Mon & Thu', 3: 'Mon, Wed & Fri', 6: 'Mon–Sat', 7: 'every day' };
+const FREQS = [2, 3, 6, 7];
+const FREQ_COLOR = { 2: 'var(--s1)', 3: 'var(--s2)', 6: 'var(--s3)', 7: 'var(--s4)' };
+const FREQ_LABEL = { 2: '2× / week', 3: '3× / week', 6: '6× / week', 7: 'Daily' };
+
+const P = { freq: 3, lead: 1, shelf: 3, buf: 0.5, chg: 0, cv: 20 };
+
+function baseKg(chg) { return DOW.map((_, d) => PRODUCTS.reduce((s, p) => s + p.units[d] * p.g / 1000, 0) * (1 + chg / 100)); }
+
+const WARM = 7, HORIZON = 28, DAYS = WARM + HORIZON;
+
+function simRun(p, rng, record) {
+  const base = baseKg(p.chg), avg = base.reduce((a, b) => a + b, 0) / 7;
+  const deliv = SCHED[p.freq], isDel = d => deliv.includes(((d % 7) + 7) % 7);
+  let lots = [{ q: avg * 2, exp: p.shelf }], pipe = [];
+  const out = { stockDays: 0, shortKg: 0, spoiled: 0, received: 0, demand: 0, onhand: [], recv: [], use: [], short: [], order: [] };
+  for (let d = 0; d < DAYS; d++) {
+    const dow = d % 7, live = d >= WARM;
+    // receive
+    let rq = 0;
+    pipe = pipe.filter(o => { if (o.arr === d) { lots.push({ q: o.q, exp: d + p.shelf }); rq += o.q; return false; } return true; });
+    // expire
+    let sp = 0; lots = lots.filter(l => { if (l.exp <= d) { sp += l.q; return false; } return true; });
+    // demand (normal noise, floored at 0)
+    const u1 = rng() || 1e-9, u2 = rng();
+    const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+    const dem = Math.max(0, base[dow] * (1 + (p.cv / 100) * z));
+    let need = dem;
+    lots.sort((a, b) => a.exp - b.exp);
+    for (const l of lots) { const t = Math.min(l.q, need); l.q -= t; need -= t; if (need <= 1e-9) break; }
+    lots = lots.filter(l => l.q > 1e-6);
+    const short = need > 0.05 ? need : 0;
+    // order for arrival on d+lead, if that is a delivery day
+    let oq = 0;
+    const arr = d + p.lead;
+    if (isDel(arr)) {
+      let nxt = arr + 1; while (!isDel(nxt)) nxt++;
+      let target = 0; for (let k = arr; k < nxt; k++) target += base[k % 7];
+      target += p.buf * avg;
+      // project usable stock at arrival: copy lots + pipeline, consume forecast FIFO, drop expired
+      let proj = lots.map(l => ({ ...l }));
+      for (let k = d + 1; k < arr; k++) {
+        pipe.forEach(o => { if (o.arr === k) proj.push({ q: o.q, exp: k + p.shelf }); });
+        proj = proj.filter(l => l.exp > k);
+        proj.sort((a, b) => a.exp - b.exp);
+        let f = base[k % 7];
+        for (const l of proj) { const t = Math.min(l.q, f); l.q -= t; f -= t; if (f <= 0) break; }
+        proj = proj.filter(l => l.q > 1e-6);
+      }
+      const usable = proj.filter(l => l.exp > arr).reduce((s, l) => s + l.q, 0);
+      oq = Math.max(0, Math.ceil((target - usable) / 0.5) * 0.5);
+      if (oq > 0) pipe.push({ arr, q: oq });
+    }
+    if (live) {
+      out.demand += dem; out.spoiled += sp; out.received += rq;
+      if (short) { out.stockDays++; out.shortKg += short; }
+      if (record) { out.onhand.push(lots.reduce((s, l) => s + l.q, 0)); out.recv.push(rq); out.use.push(dem); out.short.push(short); out.order.push(oq); }
+    }
+  }
+  return out;
+}
+
+function simulate(p, runs, seed, record) {
+  const rng = mulberry32(seed);
+  const res = [];
+  for (let r = 0; r < runs; r++) res.push(simRun(p, rng, record));
+  const mean = k => res.reduce((s, x) => s + x[k], 0) / runs;
+  return { res, runs, emergency: mean('stockDays'), spoiled: mean('spoiled'), shortKg: mean('shortKg'), demand: mean('demand'), received: mean('received') };
+}
+
+/* ---------- charts ---------- */
+function fanChart(el, data) {
+  const W = el.clientWidth || 640, H = 250, m = { l: 40, r: 14, t: 10, b: 30 };
+  const n = data.p50.length, iw = W - m.l - m.r, ih = H - m.t - m.b;
+  const sc = niceScale(Math.max(...data.p90) * 1.05), ymax = sc.max;
+  const x = i => m.l + (iw * i) / (n - 1), y = v => m.t + ih - (ih * v) / ymax;
+  el.innerHTML = '';
+  const s = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, class: 'chart', role: 'img', 'aria-label': 'Raspberries on hand over the next two weeks' }, el);
+  for (let i = 0; i <= sc.n; i++) { const v = sc.step * i; svgEl('line', { x1: m.l, x2: W - m.r, y1: y(v), y2: y(v), stroke: css('--grid') }, s); const t = svgEl('text', { x: m.l - 6, y: y(v) + 4, 'text-anchor': 'end', 'font-size': 11, fill: css('--text-muted') }, s); t.textContent = fmt(v, sc.dp); }
+  const yt = svgEl('text', { x: 4, y: m.t + 2, 'font-size': 11, fill: css('--text-muted'), 'dominant-baseline': 'hanging' }, s); yt.textContent = 'kg';
+  data.deliv.forEach((dv, i) => { if (dv) svgEl('rect', { x: x(i) - 1.5, y: m.t + ih + 2, width: 3, height: 7, rx: 1, fill: '#cfcdc6' }, s); });
+  let band = `M${x(0)},${y(data.p90[0])}`; for (let i = 1; i < n; i++) band += `L${x(i)},${y(data.p90[i])}`; for (let i = n - 1; i >= 0; i--) band += `L${x(i)},${y(data.p10[i])}`;
+  svgEl('path', { d: band + 'Z', fill: css('--band'), opacity: 0.85 }, s);
+  svgEl('line', { x1: m.l, x2: W - m.r, y1: y(0), y2: y(0), stroke: '#b9b7ae' }, s);
+  let ln = `M${x(0)},${y(data.p50[0])}`; for (let i = 1; i < n; i++) ln += `L${x(i)},${y(data.p50[i])}`;
+  svgEl('path', { d: ln, fill: 'none', stroke: css('--s1'), 'stroke-width': 2, 'stroke-linejoin': 'round' }, s);
+  data.labels.forEach((lb, i) => { const t = svgEl('text', { x: x(i), y: H - 6, 'text-anchor': 'middle', 'font-size': 10.5, fill: css('--text-muted') }, s); t.textContent = lb; });
+  const cross = svgEl('line', { y1: m.t, y2: m.t + ih, stroke: '#8a8983', 'stroke-dasharray': '3 3', opacity: 0 }, s);
+  const dot = svgEl('circle', { r: 4.5, fill: css('--s1'), stroke: css('--surface-1'), 'stroke-width': 2, opacity: 0 }, s);
+  const hit = svgEl('rect', { x: m.l, y: m.t, width: iw, height: ih, fill: 'transparent' }, s);
+  hit.addEventListener('mousemove', ev => {
+    const r = s.getBoundingClientRect(), px = (ev.clientX - r.left) * (W / r.width);
+    const i = Math.max(0, Math.min(n - 1, Math.round(((px - m.l) / iw) * (n - 1))));
+    cross.setAttribute('x1', x(i)); cross.setAttribute('x2', x(i)); cross.setAttribute('opacity', 1);
+    dot.setAttribute('cx', x(i)); dot.setAttribute('cy', y(data.p50[i])); dot.setAttribute('opacity', 1);
+    showTip(`<b>${data.full[i]}</b><br>Typical end-of-day stock: ${fmt(data.p50[i])} kg<br>Likely range: ${fmt(data.p10[i])}–${fmt(data.p90[i])} kg<br>Chance of running short: ${Math.round(data.risk[i] * 100)}%${data.deliv[i] ? '<br>Delivery day' : ''}`, ev);
+  });
+  hit.addEventListener('mouseleave', () => { cross.setAttribute('opacity', 0); dot.setAttribute('opacity', 0); hideTip(); });
+}
+
+function lineChart(el, cfg) {
+  const W = el.clientWidth || 480, H = 220, m = { l: 40, r: 64, t: 10, b: 32 };
+  const iw = W - m.l - m.r, ih = H - m.t - m.b;
+  const xs = cfg.x, n = xs.length;
+  const sc = niceScale(Math.max(...cfg.series.flatMap(s => s.values)) * 1.05), ymax = sc.max;
+  const x = i => m.l + (iw * i) / (n - 1), y = v => m.t + ih - (ih * v) / ymax;
+  el.innerHTML = '';
+  const s = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, class: 'chart', role: 'img', 'aria-label': cfg.aria }, el);
+  for (let i = 0; i <= sc.n; i++) { const v = sc.step * i; svgEl('line', { x1: m.l, x2: m.l + iw, y1: y(v), y2: y(v), stroke: i ? css('--grid') : '#b9b7ae' }, s); const t = svgEl('text', { x: m.l - 6, y: y(v) + 4, 'text-anchor': 'end', 'font-size': 11, fill: css('--text-muted') }, s); t.textContent = fmt(v, sc.dp); }
+  xs.forEach((v, i) => { if (i % 2 === 0) { const t = svgEl('text', { x: x(i), y: H - 14, 'text-anchor': 'middle', 'font-size': 10.5, fill: css('--text-muted') }, s); t.textContent = v; } });
+  const xt = svgEl('text', { x: m.l + iw / 2, y: H - 1, 'text-anchor': 'middle', 'font-size': 11, fill: css('--text-secondary') }, s); xt.textContent = cfg.xTitle;
+  // label de-collision for direct labels
+  const ends = cfg.series.map(sr => ({ sr, y: y(sr.values[n - 1]) })).sort((a, b) => a.y - b.y);
+  for (let i = 1; i < ends.length; i++) if (ends[i].y - ends[i - 1].y < 13) ends[i].y = ends[i - 1].y + 13;
+  const over = ends.length ? ends[ends.length - 1].y - (m.t + ih) : 0;
+  if (over > 0) { ends[ends.length - 1].y -= over; for (let i = ends.length - 2; i >= 0; i--) if (ends[i + 1].y - ends[i].y < 13) ends[i].y = ends[i + 1].y - 13; }
+  cfg.series.forEach(sr => {
+    let d = `M${x(0)},${y(sr.values[0])}`; for (let i = 1; i < n; i++) d += `L${x(i)},${y(sr.values[i])}`;
+    svgEl('path', { d, fill: 'none', stroke: sr.color, 'stroke-width': sr.active ? 2.5 : 2, opacity: sr.active ? 1 : 0.75, 'stroke-linejoin': 'round' }, s);
+  });
+  ends.forEach(e => { const t = svgEl('text', { x: m.l + iw + 6, y: e.y + 4, 'font-size': 11, fill: css('--text-secondary'), 'font-weight': e.sr.active ? 650 : 400 }, s); t.textContent = e.sr.short; });
+  const cur = cfg.series.find(sr => sr.active);
+  if (cur) { svgEl('circle', { cx: x(cfg.curIdx), cy: y(cur.values[cfg.curIdx]), r: 7, fill: 'none', stroke: css('--text-primary'), 'stroke-width': 1.5 }, s); svgEl('circle', { cx: x(cfg.curIdx), cy: y(cur.values[cfg.curIdx]), r: 4, fill: cur.color, stroke: css('--surface-1'), 'stroke-width': 1.5 }, s); }
+  const cross = svgEl('line', { y1: m.t, y2: m.t + ih, stroke: '#8a8983', 'stroke-dasharray': '3 3', opacity: 0 }, s);
+  const hit = svgEl('rect', { x: m.l, y: m.t, width: iw, height: ih, fill: 'transparent' }, s);
+  hit.addEventListener('mousemove', ev => {
+    const r = s.getBoundingClientRect(), px = (ev.clientX - r.left) * (W / r.width);
+    const i = Math.max(0, Math.min(n - 1, Math.round(((px - m.l) / iw) * (n - 1))));
+    cross.setAttribute('x1', x(i)); cross.setAttribute('x2', x(i)); cross.setAttribute('opacity', 1);
+    const rows = [...cfg.series].sort((a, b) => b.values[i] - a.values[i]).map(sr => `<span class="sw" style="background:${sr.color}"></span>${sr.short}: <b>${fmt(sr.values[i], 1)}</b> ${cfg.unit}`).join('<br>');
+    showTip(`<b>Buffer ${xs[i]}</b><br>${rows}`, ev);
+  });
+  hit.addEventListener('mouseleave', () => { cross.setAttribute('opacity', 0); hideTip(); });
+}
+
+function stackedBars(el, cfg) {
+  const W = el.clientWidth || 480, H = cfg.height || 230, m = { l: 40, r: 10, t: 16, b: 26 };
+  const iw = W - m.l - m.r, ih = H - m.t - m.b, n = cfg.x.length;
+  const totals = cfg.x.map((_, i) => cfg.series.reduce((s, sr) => s + sr.values[i], 0));
+  const sc = niceScale(Math.max(...totals, cfg.refLine || 0) * 1.08), ymax = sc.max;
+  const bw = Math.min(46, (iw / n) * 0.62), x = i => m.l + (iw * (i + 0.5)) / n, y = v => m.t + ih - (ih * v) / ymax;
+  el.innerHTML = '';
+  const s = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, class: 'chart', role: 'img', 'aria-label': cfg.aria }, el);
+  for (let i = 0; i <= sc.n; i++) { const v = sc.step * i; svgEl('line', { x1: m.l, x2: m.l + iw, y1: y(v), y2: y(v), stroke: i ? css('--grid') : '#b9b7ae' }, s); const t = svgEl('text', { x: m.l - 6, y: y(v) + 4, 'text-anchor': 'end', 'font-size': 11, fill: css('--text-muted') }, s); t.textContent = fmt(v, sc.dp); }
+  const ut = svgEl('text', { x: 4, y: 2, 'font-size': 11, fill: css('--text-muted'), 'dominant-baseline': 'hanging' }, s); ut.textContent = cfg.unit;
+  cfg.x.forEach((lb, i) => {
+    let acc = 0; const g = svgEl('g', {}, s);
+    cfg.series.forEach((sr, k) => {
+      const v = sr.values[i]; if (v <= 0) return;
+      const y0 = y(acc), y1 = y(acc + v); acc += v;
+      const top = k === cfg.series.length - 1 || cfg.series.slice(k + 1).every(o => o.values[i] <= 0);
+      const h = Math.max(0, y0 - y1 - (top ? 0 : 2));
+      if (top && h > 4) {
+        const r = 4, xx = x(i) - bw / 2, yy = y1;
+        svgEl('path', { d: `M${xx},${yy + h}V${yy + r}Q${xx},${yy} ${xx + r},${yy}H${xx + bw - r}Q${xx + bw},${yy} ${xx + bw},${yy + r}V${yy + h}Z`, fill: sr.color }, g);
+      } else svgEl('rect', { x: x(i) - bw / 2, y: y1 + (top ? 0 : 2), width: bw, height: h, fill: sr.color }, g);
+    });
+    const t = svgEl('text', { x: x(i), y: H - 8, 'text-anchor': 'middle', 'font-size': 11, fill: css('--text-secondary') }, s); t.textContent = lb;
+    const tv = svgEl('text', { x: x(i), y: y(totals[i]) - 5, 'text-anchor': 'middle', 'font-size': 10.5, fill: css('--text-secondary') }, s); tv.textContent = fmt(totals[i], cfg.dp ?? 1);
+    const hit = svgEl('rect', { x: x(i) - (iw / n) / 2, y: m.t, width: iw / n, height: ih, fill: 'transparent' }, s);
+    hit.addEventListener('mousemove', ev => { showTip(`<b>${cfg.full ? cfg.full[i] : lb}</b><br>` + cfg.series.map(sr => `<span class="sw" style="background:${sr.color}"></span>${sr.name}: <b>${fmt(sr.values[i], cfg.dp ?? 1)}</b> ${cfg.unit}`).join('<br>') + `<br>Total: <b>${fmt(totals[i], cfg.dp ?? 1)}</b> ${cfg.unit}`, ev); });
+    hit.addEventListener('mouseleave', hideTip);
+  });
+  if (cfg.refLine) { svgEl('line', { x1: m.l, x2: m.l + iw, y1: y(cfg.refLine), y2: y(cfg.refLine), stroke: css('--text-secondary'), 'stroke-dasharray': '5 4' }, s); const t = svgEl('text', { x: m.l + 4, y: y(cfg.refLine) - 5, 'text-anchor': 'start', 'font-size': 11, fill: css('--text-secondary') }, s); t.textContent = `avg ${fmt(cfg.refLine)} h`; }
+}
+
+/* ---------- render raspberry tab ---------- */
+const BUFS = [0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+let sweepCache = {};
+function sweepKey(p) { return [p.lead, p.shelf, p.chg, p.cv].join('|'); }
+
+function renderRasp() {
+  $('#leadV').textContent = P.lead + (P.lead === 1 ? ' day' : ' days');
+  $('#shelfV').textContent = P.shelf + ' days';
+  $('#bufV').textContent = fmt(P.buf, 2).replace(/\.?0+$/, '') + (P.buf === 1 ? ' day' : ' days');
+  $('#chgV').textContent = (P.chg > 0 ? '+' : '') + P.chg + '%';
+  $('#cvV').textContent = '±' + P.cv + '%';
+  $('#freqHint').textContent = 'Deliveries arrive ' + SCHED_NAME[P.freq] + '.';
+  document.querySelectorAll('#freq button').forEach(b => b.setAttribute('aria-pressed', +b.dataset.v === P.freq));
+
+  const S = simulate(P, 400, 12345, true);
+  const base = baseKg(P.chg), avg = base.reduce((a, b) => a + b, 0) / 7;
+  const fill = 1 - S.shortKg / S.demand;
+  const spoilPct = S.received > 0 ? S.spoiled / S.received : 0;
+
+  // KPI tiles
+  const lvl = (v, a, b) => v <= a ? ['good', 'Low'] : v <= b ? ['warning', 'Watch'] : ['critical', 'High'];
+  const [eC, eL] = lvl(S.emergency, 0.5, 2), [sC, sL] = lvl(spoilPct, 0.05, 0.12);
+  $('#kpis').innerHTML = `
+    <div class="kpi"><div class="k">Emergency grocery runs</div><div class="v">${fmt(S.emergency)} <small>per 4 wks</small></div><div class="d"><span class="pill" style="background:#f3f2ee"><i style="background:var(--${eC})"></i>${eL}</span></div></div>
+    <div class="kpi"><div class="k">Raspberries thrown out</div><div class="v">${fmt(S.spoiled)} <small>kg / 4 wks</small></div><div class="d"><span class="pill" style="background:#f3f2ee"><i style="background:var(--${sC})"></i>${sL}</span> ${Math.round(spoilPct * 100)}% of deliveries</div></div>
+    <div class="kpi"><div class="k">Demand met from planned stock</div><div class="v">${fmt(fill * 100)}<small>%</small></div><div class="d">rest covered by grocery runs</div></div>
+    <div class="kpi"><div class="k">Average daily use</div><div class="v">${fmt(avg)} <small>kg</small></div><div class="d">peaks ${DOW[base.indexOf(Math.max(...base))]} at ${fmt(Math.max(...base))} kg</div></div>`;
+
+  // fan chart: first 14 recorded days (Mon..Sun x2)
+  const nd = 14, p10 = [], p50 = [], p90 = [], risk = [], deliv = [], labels = [], full = [];
+  for (let i = 0; i < nd; i++) {
+    const col = S.res.map(r => r.onhand[i]);
+    p10.push(quantile(col, 0.1)); p50.push(quantile(col, 0.5)); p90.push(quantile(col, 0.9));
+    risk.push(S.res.filter(r => r.short[i] > 0).length / S.runs);
+    deliv.push(SCHED[P.freq].includes(i % 7));
+    labels.push(DOW[i % 7]); full.push(`${DOWL[i % 7]}, week ${i < 7 ? 1 : 2}`);
+  }
+  $('#fanSub').textContent = `Each line point is stock left after the day's baking. Where the shaded range touches zero, some periods ran short.`;
+  fanChart($('#fan'), { p10, p50, p90, risk, deliv, labels, full });
+
+  // trade-off sweep (cached on non-buffer/freq params)
+  const key = sweepKey(P);
+  if (!sweepCache[key]) {
+    const out = {};
+    FREQS.forEach(f => { out[f] = BUFS.map(b => { const r = simulate({ ...P, freq: f, buf: b }, 160, 777, false); return { e: r.emergency, s: r.spoiled }; }); });
+    sweepCache = { [key]: out };
+  }
+  const SW = sweepCache[key];
+  const curIdx = BUFS.indexOf(P.buf);
+  const ser = k => FREQS.map(f => ({ short: FREQ_LABEL[f], color: FREQ_COLOR[f], values: SW[f].map(o => o[k]), active: f === P.freq }));
+  const leg = FREQS.map(f => `<span><i style="background:${FREQ_COLOR[f]}"></i>${FREQ_LABEL[f]}</span>`).join('');
+  $('#tradeLegend1').innerHTML = leg; $('#tradeLegend2').innerHTML = leg;
+  lineChart($('#tradeA'), { x: BUFS.map(b => b + 'd'), xTitle: 'Safety buffer (days of average use)', series: ser('e'), curIdx, unit: 'runs', aria: 'Emergency runs by buffer and delivery schedule' });
+  lineChart($('#tradeB'), { x: BUFS.map(b => b + 'd'), xTitle: 'Safety buffer (days of average use)', series: ser('s'), curIdx, unit: 'kg', aria: 'Kilograms spoiled by buffer and delivery schedule' });
+
+  // weekday stacked bars
+  const pc = ['var(--s1)', 'var(--s2)', 'var(--s3)', 'var(--s4)'];
+  $('#dowLegend').innerHTML = PRODUCTS.map((p, k) => `<span><i class="sq" style="background:${pc[k]}"></i>${p.name}</span>`).join('');
+  stackedBars($('#dow'), { x: DOW, full: DOWL, unit: 'kg', aria: 'Raspberries needed by weekday', series: PRODUCTS.map((p, k) => ({ name: p.name, color: pc[k], values: DOW.map((_, d) => p.units[d] * p.g / 1000 * (1 + P.chg / 100)) })) });
+
+  // plan table (recorded days 7..13 = week 2, typical)
+  let rows = '';
+  for (let i = 7; i < 14; i++) {
+    const rec = quantile(S.res.map(r => r.recv[i]), 0.5), ord = quantile(S.res.map(r => r.order[i]), 0.5);
+    const rk = risk[i];
+    const [c, l] = rk < 0.05 ? ['good', 'Low'] : rk < 0.2 ? ['warning', 'Watch'] : ['critical', 'High'];
+    rows += `<tr><td>${DOW[i % 7]}</td><td class="n">${rec > 0 ? fmt(rec) : '–'}</td><td class="n">${fmt(base[i % 7])}</td><td class="n">${fmt(p50[i])}</td><td class="n">${ord > 0 ? fmt(ord) : '–'}</td><td><span class="pill" style="background:#f3f2ee"><i style="background:var(--${c})"></i>${l} · ${Math.round(rk * 100)}%</span></td></tr>`;
+  }
+  $('#planTable').innerHTML = `<table><thead><tr><th>Day</th><th class="n">Delivery in (kg)</th><th class="n">Expected use (kg)</th><th class="n">Left at close (kg)</th><th class="n">Order placed (kg)</th><th>Short risk</th></tr></thead><tbody>${rows}</tbody></table>`;
+  $('#prodTable').innerHTML = `<table><thead><tr><th>Example product</th><th class="n">g per unit</th><th class="n">Units Mon–Fri avg</th><th class="n">Units Sat–Sun avg</th></tr></thead><tbody>${PRODUCTS.map(p => `<tr><td>${p.name}</td><td class="n">${p.g}</td><td class="n">${fmt(p.units.slice(0, 5).reduce((a, b) => a + b) / 5, 0)}</td><td class="n">${fmt((p.units[5] + p.units[6]) / 2, 0)}</td></tr>`).join('')}</tbody></table><p class="muted">Invented for the demo. A real pilot would use the bakery's recipes and production counts.</p>`;
+
+  // brief
+  const nextOrderIdx = (() => { for (let i = 7; i < 14; i++) if (quantile(S.res.map(r => r.order[i]), 0.5) > 0) return i; return -1; })();
+  const peakRisk = Math.max(...risk.slice(7, 14)), peakDay = DOWL[(7 + risk.slice(7, 14).indexOf(peakRisk)) % 7];
+  const weekend = base[5] + base[6];
+  const items = [];
+  if (nextOrderIdx >= 0) {
+    const q = quantile(S.res.map(r => r.order[nextOrderIdx]), 0.5);
+    items.push(`<b>Next order:</b> place about <b>${fmt(q)} kg</b> on ${DOWL[nextOrderIdx % 7]} for ${DOWL[(nextOrderIdx + P.lead) % 7]}'s delivery.`);
+  }
+  items.push(`<b>Weekend:</b> Saturday and Sunday need about <b>${fmt(weekend)} kg</b> combined, mostly from brunch items. Check the Friday count before ordering.`);
+  items.push(peakRisk >= 0.05 ? `<b>Watch ${peakDay}:</b> about a ${Math.round(peakRisk * 100)}% chance of running short with the current settings.` : `<b>Shortage risk is low</b> every day this week with the current settings.`);
+  // find better schedule at the same buffer
+  const alt = FREQS.filter(f => f !== P.freq).map(f => ({ f, ...SW[f][curIdx] })).filter(o => o.e <= S.emergency + 0.05 && o.s < S.spoiled - 0.5).sort((a, b) => a.s - b.s)[0];
+  const altBuf = BUFS.map((b, i) => ({ b, ...SW[P.freq][i] })).filter(o => o.b !== P.buf && o.e <= Math.max(0.5, S.emergency) && o.s < S.spoiled - 0.5).sort((a, b) => a.s - b.s)[0];
+  if (alt) items.push(`<b>Option to test:</b> switching to ${FREQ_LABEL[alt.f].toLowerCase()} deliveries would cut spoilage to ${alt.s < 0.5 ? 'almost nothing' : 'about ' + fmt(alt.s) + ' kg per 4 weeks'} without adding grocery runs. Worth checking delivery cost and minimums with the supplier.`);
+  else if (altBuf) items.push(`<b>Option to test:</b> a ${altBuf.b}-day buffer would keep grocery runs at about ${fmt(altBuf.e)} while cutting spoilage to ${fmt(altBuf.s)} kg per 4 weeks.`);
+  else if (S.emergency > 1) items.push(`<b>Option to test:</b> shortages here come from the delivery gap, not the buffer. More frequent deliveries are the lever to look at.`);
+  if (P.shelf <= 3 && P.freq === 2) items.push(`<b>Note:</b> with ${P.shelf}-day shelf life and only two deliveries a week, some days can't be covered without fruit expiring first.`);
+  $('#brief').innerHTML = items.map(t => `<li>${t}</li>`).join('');
+}
+
+document.querySelectorAll('#freq button').forEach(b => b.addEventListener('click', () => { P.freq = +b.dataset.v; renderRasp(); }));
+[['lead', 'lead'], ['shelf', 'shelf'], ['buf', 'buf'], ['chg', 'chg'], ['cv', 'cv']].forEach(([id, k]) => $('#' + id).addEventListener('input', e => { P[k] = +e.target.value; renderRasp(); }));
+
+/* ===================== ROUTES ===================== */
+const HUB = { name: 'Central bakery · 60 Old Colony Ave', lat: 42.3345, lon: -71.0560 };
+// Public-listing addresses; coordinates approximate. dt = dense downtown stop.
+const CAFES = [
+  { r: 0, name: 'Seaport', addr: '200 Pier Four Blvd, Boston', lat: 42.3530, lon: -71.0440, dt: 1 },
+  { r: 0, name: 'Summer St', addr: '125 Summer St, Boston', lat: 42.3540, lon: -71.0570, dt: 1 },
+  { r: 0, name: 'One Boston Place', addr: '201 Washington St, Boston', lat: 42.3580, lon: -71.0580, dt: 1 },
+  { r: 0, name: 'Emerson', addr: '80 Boylston St, Boston', lat: 42.3523, lon: -71.0645, dt: 1 },
+  { r: 0, name: 'Beacon Hill', addr: '70 Charles St, Boston', lat: 42.3570, lon: -71.0705, dt: 1 },
+  { r: 0, name: 'Charlestown', addr: '40 Warren St, Boston', lat: 42.3735, lon: -71.0620, dt: 0 },
+  { r: 1, name: 'South End', addr: '345 Harrison Ave, Boston', lat: 42.3445, lon: -71.0640, dt: 1 },
+  { r: 1, name: 'Copley Square', addr: '200 Clarendon St, Boston', lat: 42.3500, lon: -71.0745, dt: 1 },
+  { r: 1, name: 'Back Bay', addr: '399 Boylston St, Boston', lat: 42.3515, lon: -71.0720, dt: 1 },
+  { r: 1, name: 'Berklee', addr: '160 Massachusetts Ave, Boston', lat: 42.3470, lon: -71.0870, dt: 1 },
+  { r: 1, name: 'Huntington Ave', addr: '369 Huntington Ave, Boston', lat: 42.3405, lon: -71.0895, dt: 1 },
+  { r: 1, name: 'Fenway', addr: '1352 Boylston St, Boston', lat: 42.3455, lon: -71.0985, dt: 0 },
+  { r: 2, name: 'Kendall (Third St)', addr: '318 Third St, Cambridge', lat: 42.3655, lon: -71.0820, dt: 0 },
+  { r: 2, name: 'Cambridge Crossing', addr: 'Cambridge (approx.)', lat: 42.3735, lon: -71.0750, dt: 0 },
+  { r: 2, name: 'Assembly Row', addr: '305 Assembly Row, Somerville', lat: 42.3925, lon: -71.0775, dt: 0 },
+  { r: 2, name: 'Harvard Square', addr: '1288 Massachusetts Ave, Cambridge', lat: 42.3725, lon: -71.1160, dt: 1 },
+  { r: 2, name: 'Arlington', addr: '645 Massachusetts Ave, Arlington', lat: 42.4150, lon: -71.1560, dt: 0 },
+  { r: 2, name: 'Lexington', addr: '1777 Massachusetts Ave, Lexington', lat: 42.4475, lon: -71.2265, dt: 0 },
+  { r: 2, name: 'Burlington', addr: 'Burlington (approx.)', lat: 42.4840, lon: -71.2010, dt: 0 },
+  { r: 2, name: 'Belmont', addr: '495 Trapelo Rd, Belmont', lat: 42.3920, lon: -71.1870, dt: 0 },
+  { r: 3, name: 'Brookline (Beacon St)', addr: '1003 Beacon St, Brookline', lat: 42.3460, lon: -71.1070, dt: 0 },
+  { r: 3, name: 'Coolidge Corner', addr: '420 Harvard St, Brookline', lat: 42.3440, lon: -71.1215, dt: 0 },
+  { r: 3, name: 'Newton Centre', addr: '1241 Centre St, Newton', lat: 42.3295, lon: -71.1925, dt: 0 },
+  { r: 3, name: 'Wellesley', addr: '165 Linden St, Wellesley', lat: 42.2950, lon: -71.2900, dt: 0 },
+  { r: 3, name: 'Hingham', addr: 'Hingham (approx.)', lat: 42.2400, lon: -70.8900, dt: 0 },
+];
+const ROUTES = [
+  { name: 'Route 1 · Downtown & Seaport', short: 'R1 Downtown', color: 'var(--r1)', dash: '' },
+  { name: 'Route 2 · Back Bay & Fenway', short: 'R2 Back Bay', color: 'var(--r2)', dash: '6 3' },
+  { name: 'Route 3 · Cambridge & North', short: 'R3 North', color: 'var(--r3)', dash: '2 3' },
+  { name: 'Route 4 · Brookline, West & South Shore', short: 'R4 West/South', color: 'var(--r4)', dash: '9 3 2 3' },
+];
+const RP = { stopMin: 12, dtExtra: 8, speed: 28 };
+function miles(a, b) { const R = 3958.8, toR = Math.PI / 180, dLat = (b.lat - a.lat) * toR, dLon = (b.lon - a.lon) * toR; const h = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * toR) * Math.cos(b.lat * toR) * Math.sin(dLon / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(h)) * 1.35; }
+function legSpeed(mi) { return mi < 1.5 ? 11 : mi < 5 ? 17 : RP.speed; }
+function buildRoutes() {
+  return ROUTES.map((R, ri) => {
+    let left = CAFES.filter(c => c.r === ri), cur = HUB, seq = [], mi = 0, drive = 0;
+    while (left.length) { left.sort((a, b) => miles(cur, a) - miles(cur, b)); const nx = left.shift(); const d = miles(cur, nx); mi += d; drive += d / legSpeed(d); seq.push(nx); cur = nx; }
+    // 2-opt clean-up of the nearest-next order
+    const tour = () => [HUB, ...seq, HUB].reduce((t, p, i, a) => i ? t + miles(a[i - 1], p) : 0, 0);
+    let improved = true;
+    while (improved) { improved = false; for (let i = 0; i < seq.length - 1; i++) for (let j = i + 1; j < seq.length; j++) { const before = tour(); const cand = [...seq.slice(0, i), ...seq.slice(i, j + 1).reverse(), ...seq.slice(j + 1)]; const old = seq; seq = cand; if (tour() < before - 1e-6) improved = true; else seq = old; } }
+    mi = 0; drive = 0; [HUB, ...seq, HUB].forEach((p, i, a) => { if (i) { const d = miles(a[i - 1], p); mi += d; drive += d / legSpeed(d); } });
+    cur = HUB; const back = 0;
+    const stopH = seq.reduce((s, c) => s + (RP.stopMin + (c.dt ? RP.dtExtra : 0)) / 60, 0);
+    return { ...R, seq, mi, drive, stopH, total: drive + stopH, dtStops: seq.filter(c => c.dt).length };
+  });
+}
+function renderRoutes() {
+  $('#stopMinV').textContent = RP.stopMin + ' min'; $('#dtExtraV').textContent = '+' + RP.dtExtra + ' min'; $('#speedV').textContent = RP.speed + ' mph';
+  const rs = buildRoutes(), avg = rs.reduce((s, r) => s + r.total, 0) / rs.length;
+  const hi = rs.reduce((a, b) => a.total > b.total ? a : b), lo = rs.reduce((a, b) => a.total < b.total ? a : b);
+  $('#rkpis').innerHTML = `
+    <div class="kpi"><div class="k">Cafés served (MA, public listings)</div><div class="v">${CAFES.length}</div><div class="d">plus the café at the bakery itself</div></div>
+    <div class="kpi"><div class="k">Average route</div><div class="v">${fmt(avg)} <small>h</small></div><div class="d">driving + time at stops</div></div>
+    <div class="kpi"><div class="k">Longest vs. shortest</div><div class="v">${fmt(hi.total - lo.total)} <small>h gap</small></div><div class="d">${hi.short} vs. ${lo.short}</div></div>
+    <div class="kpi"><div class="k">Total miles, all routes</div><div class="v">${fmt(rs.reduce((s, r) => s + r.mi, 0), 0)}</div><div class="d">estimated road miles</div></div>`;
+  $('#mapLegend').innerHTML = rs.map(r => `<span><svg width="22" height="6"><line x1="0" y1="3" x2="22" y2="3" stroke="${r.color}" stroke-width="2.5" stroke-dasharray="${r.dash}"/></svg>${r.name}</span>`).join('') + `<span><svg width="12" height="12"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0b0b0b"/></svg>Central bakery</span>`;
+  drawMap($('#map'), rs);
+  stackedBars($('#hours'), { x: rs.map(r => r.short), full: rs.map(r => r.name), unit: 'h', aria: 'Estimated hours per route', refLine: avg, height: 240, series: [{ name: 'Driving', color: 'var(--s1)', values: rs.map(r => r.drive) }, { name: 'At stops', color: 'var(--s2)', values: rs.map(r => r.stopH) }] });
+  $('#routeTable').innerHTML = `<table><thead><tr><th>Route</th><th class="n">Stops</th><th class="n">Downtown stops</th><th class="n">Est. miles</th><th class="n">Est. hours</th><th class="n">vs. avg</th></tr></thead><tbody>${[...rs].sort((a, b) => b.total - a.total).map(r => `<tr><td><span class="sw" style="background:${r.color}"></span>${r.short}</td><td class="n">${r.seq.length}</td><td class="n">${r.dtStops}</td><td class="n">${fmt(r.mi, 0)}</td><td class="n">${fmt(r.total)}</td><td class="n">${r.total >= avg ? '+' : '−'}${fmt(Math.abs(r.total - avg))} h</td></tr>`).join('')}</tbody></table>`;
+  const drivers = ['Driver A', 'Driver B', 'Driver C', 'Driver D'];
+  $('#rotation').innerHTML = `<table><thead><tr><th></th>${[1, 2, 3, 4].map(w => `<th>Week ${w}</th>`).join('')}<th class="n">4-wk avg</th></tr></thead><tbody>${drivers.map((d, i) => `<tr><td>${d}</td>${[0, 1, 2, 3].map(w => { const r = rs[(i + w) % 4]; return `<td style="white-space:nowrap"><span class="sw" style="background:${r.color}"></span>${r.short.split(' ')[0]} · ${fmt(r.total)}h</td>`; }).join('')}<td class="n"><b>${fmt(avg)} h</b></td></tr>`).join('')}</tbody></table><p class="muted" style="margin-top:8px">Trade-off: drivers lose familiarity with one route's stops and contacts. Rebalancing which cafés sit on which route is the other option.</p>`;
+}
+function drawMap(el, rs) {
+  const W = el.clientWidth || 700, H = Math.round(Math.min(460, W * 0.62)), pad = 22;
+  const pts = [HUB, ...CAFES], lats = pts.map(p => p.lat), lons = pts.map(p => p.lon);
+  const k = Math.cos(42.35 * Math.PI / 180);
+  const minX = Math.min(...lons) * k, maxX = Math.max(...lons) * k, minY = Math.min(...lats), maxY = Math.max(...lats);
+  const sc = Math.min((W - 2 * pad) / (maxX - minX), (H - 2 * pad) / (maxY - minY));
+  const ox = (W - (maxX - minX) * sc) / 2, oy = (H - (maxY - minY) * sc) / 2;
+  const X = p => ox + (p.lon * k - minX) * sc, Y = p => H - oy - (p.lat - minY) * sc;
+  el.innerHTML = '';
+  const s = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, class: 'chart', role: 'img', 'aria-label': 'Map of illustrative routes' }, el);
+  svgEl('rect', { x: 0, y: 0, width: W, height: H, rx: 8, fill: '#f7f6f2' }, s);
+  rs.forEach(r => { const path = [HUB, ...r.seq, HUB]; svgEl('path', { d: path.map((p, i) => (i ? 'L' : 'M') + X(p) + ',' + Y(p)).join(''), fill: 'none', stroke: r.color, 'stroke-width': 2, 'stroke-dasharray': r.dash, 'stroke-linejoin': 'round', opacity: 0.9 }, s); });
+  rs.forEach((r, ri) => r.seq.forEach((c, i) => {
+    const g = svgEl('g', { style: 'cursor:default' }, s);
+    svgEl('circle', { cx: X(c), cy: Y(c), r: 6, fill: r.color, stroke: '#fcfcfb', 'stroke-width': 2 }, g);
+    const hit = svgEl('circle', { cx: X(c), cy: Y(c), r: 11, fill: 'transparent' }, g);
+    hit.addEventListener('mousemove', ev => showTip(`<b>${c.name}</b><br>${c.addr}<br>${r.name}, stop ${i + 1} of ${r.seq.length}${c.dt ? '<br>Dense downtown stop' : ''}`, ev));
+    hit.addEventListener('mouseleave', hideTip);
+  }));
+  // direct route labels at the stop farthest from the hub
+  rs.forEach(r => r.seq.forEach(c => { const far = r.seq.reduce((a, b) => miles(HUB, a) > miles(HUB, b) ? a : b); if (c === far || miles(HUB, c) < 14) return; const t = svgEl('text', { x: X(c) - 9, y: Y(c) + 4, 'text-anchor': 'end', 'font-size': 11.5, 'font-weight': 600, fill: '#3a3936', 'paint-order': 'stroke', stroke: '#f7f6f2', 'stroke-width': 3 }, s); t.textContent = c.name; }));
+  rs.forEach(r => { const far = r.seq.reduce((a, b) => miles(HUB, a) > miles(HUB, b) ? a : b); const t = svgEl('text', { x: X(far) + 9, y: Y(far) + 4, 'font-size': 11.5, 'font-weight': 600, fill: '#3a3936', 'paint-order': 'stroke', stroke: '#f7f6f2', 'stroke-width': 3 }, s); t.textContent = r.short.split(' ')[0] + ' · ' + far.name; if (X(far) > W - 120) { t.setAttribute('x', X(far) - 9); t.setAttribute('text-anchor', 'end'); } });
+  svgEl('rect', { x: X(HUB) - 6, y: Y(HUB) - 6, width: 12, height: 12, rx: 2, fill: '#0b0b0b', stroke: '#fcfcfb', 'stroke-width': 2 }, s);
+  const ht = svgEl('text', { x: X(HUB) + 10, y: Y(HUB) + 16, 'font-size': 11.5, 'font-weight': 600, fill: '#0b0b0b', 'paint-order': 'stroke', stroke: '#f7f6f2', 'stroke-width': 3 }, s); ht.textContent = 'Central bakery';
+}
+[['stopMin', 'stopMin'], ['dtExtra', 'dtExtra'], ['speed', 'speed']].forEach(([id, k]) => $('#' + id).addEventListener('input', e => { RP[k] = +e.target.value; renderRoutes(); }));
+
+let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { if ($('#panel-routes').hidden) renderRasp(); else renderRoutes(); }, 150); });
+renderRasp();
+</script>
+</body>
+</html>
